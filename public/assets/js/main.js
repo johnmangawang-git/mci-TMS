@@ -1,40 +1,56 @@
-// Initialize global data arrays for Supabase-centric delivery system
-if (typeof window.activeDeliveries === 'undefined') {
-    window.activeDeliveries = [];
-    console.log('✅ Initialized window.activeDeliveries array (Supabase-centric)');
-}
+// CENTRALIZED DATABASE APP - Multi-user synchronized data
+console.log('🌐 Initializing Centralized Database App...');
 
-if (typeof window.deliveryHistory === 'undefined') {
-    window.deliveryHistory = [];
-    console.log('✅ Initialized window.deliveryHistory array (Supabase-centric)');
-}
+// Global data arrays will be managed by CentralizedDataService
+// These are just placeholders until the service initializes
+window.activeDeliveries = [];
+window.deliveryHistory = [];
+window.customers = [];
+window.bookings = [];
+window.ePodRecords = [];
 
-// SUPABASE-CENTRIC: Clear any existing localStorage data to prevent conflicts
-try {
-    // Clear old localStorage keys that might interfere with Supabase data
-    const localStorageKeys = [
-        'mci-active-deliveries',
-        'mci-delivery-history', 
-        'deliveries',
-        'deliveryHistory',
-        'activeDeliveries',
-        'completedDeliveries'
-    ];
+// Wait for centralized data service to be ready
+let dataServiceReady = false;
+
+window.addEventListener('centralizedDataServiceReady', function() {
+    dataServiceReady = true;
+    console.log('✅ Centralized Data Service is ready - multi-user sync enabled');
     
-    localStorageKeys.forEach(key => {
-        if (localStorage.getItem(key)) {
-            localStorage.removeItem(key);
-            console.log(`🗑️ Cleared localStorage key: ${key}`);
-        }
-    });
+    // Refresh all UI components
+    refreshAllViews();
+});
+
+// Function to refresh all views when data changes
+function refreshAllViews() {
+    console.log('🔄 Refreshing all views with synchronized data...');
     
-    console.log('✅ localStorage cleared - app is now fully Supabase-centric');
-} catch (error) {
-    console.warn('Warning clearing localStorage:', error);
+    // Refresh active deliveries view
+    if (typeof refreshActiveDeliveries === 'function') {
+        refreshActiveDeliveries();
+    }
+    
+    // Refresh delivery history view
+    if (typeof refreshDeliveryHistory === 'function') {
+        refreshDeliveryHistory();
+    }
+    
+    // Refresh customers view
+    if (typeof refreshCustomers === 'function') {
+        refreshCustomers();
+    }
+    
+    // Refresh analytics
+    if (typeof updateAnalyticsDashboard === 'function') {
+        updateAnalyticsDashboard();
+    }
 }
 
-// Data will be loaded from Supabase when needed
-console.log('📡 App configured for Supabase-only data source');
+// Listen for data updates from other users
+window.addEventListener('deliveriesUpdated', refreshAllViews);
+window.addEventListener('customersUpdated', refreshAllViews);
+window.addEventListener('bookingsUpdated', refreshAllViews);
+
+console.log('📡 Multi-user synchronization configured');
 
 // Main application initialization
 document.addEventListener('DOMContentLoaded', function () {

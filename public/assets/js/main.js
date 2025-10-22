@@ -1,33 +1,40 @@
-// Initialize global data arrays for analytics and booking system
+// Initialize global data arrays for Supabase-centric delivery system
 if (typeof window.activeDeliveries === 'undefined') {
     window.activeDeliveries = [];
-    console.log('✅ Initialized window.activeDeliveries array');
+    console.log('✅ Initialized window.activeDeliveries array (Supabase-centric)');
 }
 
 if (typeof window.deliveryHistory === 'undefined') {
     window.deliveryHistory = [];
-    console.log('✅ Initialized window.deliveryHistory array');
+    console.log('✅ Initialized window.deliveryHistory array (Supabase-centric)');
 }
 
-// Load data from localStorage if available
+// SUPABASE-CENTRIC: Clear any existing localStorage data to prevent conflicts
 try {
-    const savedActiveDeliveries = localStorage.getItem('mci-active-deliveries');
-    const savedDeliveryHistory = localStorage.getItem('mci-delivery-history');
+    // Clear old localStorage keys that might interfere with Supabase data
+    const localStorageKeys = [
+        'mci-active-deliveries',
+        'mci-delivery-history', 
+        'deliveries',
+        'deliveryHistory',
+        'activeDeliveries',
+        'completedDeliveries'
+    ];
     
-    if (savedActiveDeliveries) {
-        window.activeDeliveries = JSON.parse(savedActiveDeliveries);
-        console.log(`✅ Loaded ${window.activeDeliveries.length} active deliveries from localStorage`);
-    }
+    localStorageKeys.forEach(key => {
+        if (localStorage.getItem(key)) {
+            localStorage.removeItem(key);
+            console.log(`🗑️ Cleared localStorage key: ${key}`);
+        }
+    });
     
-    if (savedDeliveryHistory) {
-        window.deliveryHistory = JSON.parse(savedDeliveryHistory);
-        console.log(`✅ Loaded ${window.deliveryHistory.length} delivery history from localStorage`);
-    }
+    console.log('✅ localStorage cleared - app is now fully Supabase-centric');
 } catch (error) {
-    console.error('Error loading delivery data from localStorage:', error);
-    window.activeDeliveries = [];
-    window.deliveryHistory = [];
+    console.warn('Warning clearing localStorage:', error);
 }
+
+// Data will be loaded from Supabase when needed
+console.log('📡 App configured for Supabase-only data source');
 
 // Main application initialization
 document.addEventListener('DOMContentLoaded', function () {

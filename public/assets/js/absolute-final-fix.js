@@ -180,7 +180,9 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
             message.includes('Failed to load resource') ||
             message.includes('Centralized Data Service') ||
             message.includes('client not available') ||
-            message.includes('waitForSupabaseClient')) {
+            message.includes('waitForSupabaseClient') ||
+            message.includes('message channel closed') ||
+            message.includes('asynchronous response')) {
             console.warn('⚠️ Suppressed error:', message);
             return;
         }

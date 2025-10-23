@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Test</title>
+</head>
+<body>
+    <h1>Simple Test Page</h1>
+    <button id="testBtn" style="background: red; color: white; padding: 20px; font-size: 18px;">
+        CLICK TO TEST LOCALSTORAGE
+    </button>
+    
+    <div id="results" style="margin-top: 20px; padding: 20px; background: #f0f0f0;"></div>
+    
+    <script>
+        console.log('🚨 SIMPLE TEST LOADING...');
+        
+        document.getElementById('testBtn').onclick = function() {
+            console.log('🔧 Test button clicked');
+            
+            const results = document.getElementById('results');
+            let html = '<h3>Test Results:</h3>';
+            
+            try {
+                // Test localStorage
+                localStorage.setItem('test', 'working');
+                const test = localStorage.getItem('test');
+                html += `<p>✅ localStorage test: ${test}</p>`;
+                localStorage.removeItem('test');
+                
+                // Check existing data
+                const activeStored = localStorage.getItem('mci-activeDeliveries');
+                html += `<p>📦 mci-activeDeliveries: ${activeStored ? 'EXISTS' : 'NOT FOUND'}</p>`;
+                
+                if (activeStored) {
+                    const parsed = JSON.parse(activeStored);
+                    html += `<p>📊 Count: ${parsed.length}</p>`;
+                    html += `<p>📋 Data: ${JSON.stringify(parsed, null, 2)}</p>`;
+                }
+                
+                // Create test data
+                const testData = {
+                    id: 'TEST-' + Date.now(),
+                    drNumber: 'SIMPLE-TEST-' + Date.now(),
+                    customerName: 'Simple Test Customer',
+                    origin: 'Test Origin',
+                    destination: 'Test Destination',
+                    status: 'Active',
+                    bookedDate: new Date().toISOString().split('T')[0],
+                    additionalCosts: 123
+                };
+                
+                const existing = activeStored ? JSON.parse(activeStored) : [];
+                existing.push(testData);
+                
+                localStorage.setItem('mci-activeDeliveries', JSON.stringify(existing));
+                
+                html += `<p>✅ Added test data: ${testData.drNumber}</p>`;
+                html += `<p>📊 New count: ${existing.length}</p>`;
+                
+                alert(`✅ Test completed! Added DR: ${testData.drNumber}`);
+                
+            } catch (error) {
+                html += `<p>❌ Error: ${error.message}</p>`;
+                console.error('❌ Test error:', error);
+            }
+            
+            results.innerHTML = html;
+        };
+        
+        console.log('✅ SIMPLE TEST READY');
+    </script>
+</body>
+</html>

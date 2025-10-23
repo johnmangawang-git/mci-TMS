@@ -168,6 +168,85 @@
     <!-- FIX DATA DUPLICATION - Prevents delivery history duplication and handles 406 errors -->
     <script src="assets/js/fix-data-duplication.js"></script>
     
+    <!-- INLINE TEST - Direct test without external files -->
+    <script>
+        console.log('🚨 INLINE TEST LOADING...');
+        
+        setTimeout(() => {
+            console.log('🔧 INLINE: Creating test button...');
+            
+            const testBtn = document.createElement('button');
+            testBtn.textContent = '🚨 INLINE TEST BUTTON 🚨';
+            testBtn.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 99999;
+                background: red;
+                color: white;
+                padding: 15px;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+            `;
+            
+            testBtn.onclick = function() {
+                console.log('🔧 INLINE: Test button clicked!');
+                
+                try {
+                    // Test localStorage
+                    const testData = {
+                        id: 'INLINE-' + Date.now(),
+                        drNumber: 'INLINE-TEST-' + Date.now(),
+                        customerName: 'Inline Test Customer',
+                        origin: 'Inline Origin',
+                        destination: 'Inline Destination',
+                        status: 'Active',
+                        bookedDate: new Date().toISOString().split('T')[0],
+                        additionalCosts: 456
+                    };
+                    
+                    const stored = localStorage.getItem('mci-activeDeliveries');
+                    const existing = stored ? JSON.parse(stored) : [];
+                    existing.push(testData);
+                    
+                    localStorage.setItem('mci-activeDeliveries', JSON.stringify(existing));
+                    
+                    console.log('✅ INLINE: Test data saved:', testData);
+                    console.log('✅ INLINE: Total count:', existing.length);
+                    
+                    alert(`✅ INLINE TEST SUCCESS!\nDR: ${testData.drNumber}\nTotal: ${existing.length} deliveries`);
+                    
+                    // Try to update dashboard
+                    const cards = document.querySelectorAll('.card-body h2');
+                    cards.forEach(card => {
+                        if (card.textContent === '290') {
+                            card.textContent = existing.length.toString();
+                            card.style.color = 'red';
+                            console.log('✅ INLINE: Updated 290 to', existing.length);
+                        }
+                        if (card.textContent === '289') {
+                            card.textContent = '0';
+                            card.style.color = 'red';
+                            console.log('✅ INLINE: Updated 289 to 0');
+                        }
+                    });
+                    
+                } catch (error) {
+                    console.error('❌ INLINE: Error:', error);
+                    alert('❌ INLINE TEST FAILED: ' + error.message);
+                }
+            };
+            
+            document.body.appendChild(testBtn);
+            console.log('✅ INLINE: Test button added');
+            
+        }, 2000);
+        
+        console.log('✅ INLINE TEST READY');
+    </script>
+    
     <!-- FORCE DASHBOARD FIX - Aggressively fixes dashboard numbers -->
     <script src="assets/js/force-dashboard-fix.js"></script>
     

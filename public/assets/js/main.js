@@ -146,7 +146,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                     // Initialize E-POD functionality for E-Signature button
-                    initEPod();
+                    if (typeof initEPod === 'function') {
+                        initEPod();
+                    } else {
+                        console.warn('⚠️ initEPod function not available');
+                    }
                 }
 
                 // Special handling for delivery history view
@@ -157,7 +161,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Special handling for E-POD view
                 if (viewName === 'e-pod') {
                     console.log('EPOD tab clicked, loading EPOD deliveries');
-                    initEPod();
+                    if (typeof initEPod === 'function') {
+                        initEPod();
+                    } else {
+                        console.warn('⚠️ initEPod function not available');
+                    }
                 }
                 
                 // Special handling for Customers view

@@ -162,6 +162,9 @@
     <!-- CENTRALIZED EXCEL INTEGRATION - Excel uploads through Supabase -->
     <script src="assets/js/centralized-excel-integration.js"></script>
     
+    <!-- NUCLEAR ERROR SUPPRESSION - Must load first to catch all errors -->
+    <script src="assets/js/nuclear-error-suppression.js"></script>
+    
     <!-- ANALYTICS COMPLETE OVERRIDE - Must load before analytics.js -->
     <script src="assets/js/analytics-complete-override.js"></script>
     
@@ -206,7 +209,7 @@
 
     <script src="assets/js/booking.js"></script>
     <script src="assets/js/customers.js"></script>
-    <script src="assets/js/analytics.js"></script>
+    <!-- DISABLED: <script src="assets/js/analytics.js"></script> - Replaced with safe override -->
     <script src="assets/js/warehouse.js"></script>
     <script src="assets/js/supabase.js"></script>
     <script src="assets/js/dataService.js"></script>

@@ -87,21 +87,51 @@ class CentralizedExcelIntegration {
             // Show loading indicator
             this.showUploadProgress('Processing Excel data...');
 
+            // Wait for centralized services to be ready
+            if (!window.centralizedDataService?.isInitialized) {
+                this.showUploadProgress('Waiting for database connection...');
+                await this.waitForServices();
+            }
+
             // Convert Excel data to delivery format
             const deliveries = this.convertExcelToDeliveries(data);
             console.log('📋 Converted to deliveries:', deliveries.length);
 
-            // Batch import through centralized booking service
-            if (window.centralizedBookingService?.isReady) {
-                const result = await window.centralizedBookingService.batchImportDeliveries(deliveries);
-                
-                this.showUploadSuccess(result);
-                this.refreshUI();
-                
-            } else {
-                throw new Error('Centralized Booking Service not ready');
+            if (deliveries.length === 0) {
+                throw new Error('No valid deliveries found in Excel data');
             }
 
+            // Process deliveries one by one to handle conflicts better
+            const results = { success: 0, failed: 0, errors: [] };
+            
+            this.showUploadProgress(`Processing ${deliveries.length} deliveries...`);
+
+            for (let i = 0; i < deliveries.length; i++) {
+                const delivery = deliveries[i];
+                try {
+                    this.showUploadProgress(`Processing delivery ${i + 1}/${deliveries.length}: ${delivery.drNumber}`);
+                    
+                    if (window.centralizedDataService?.isInitialized) {
+                        await window.centralizedDataService.addDelivery(delivery);
+                        results.success++;
+                        console.log(`✅ Added delivery ${i + 1}/${deliveries.length}: ${delivery.drNumber}`);
+                    } else {
+                        throw new Error('Centralized Data Service not ready');
+                    }
+                    
+                } catch (error) {
+                    results.failed++;
+                    results.errors.push({
+                        delivery: delivery.drNumber || `Row ${i + 1}`,
+                        error: error.message
+                    });
+                    console.error(`❌ Failed to add delivery ${i + 1}:`, error.message);
+                }
+            }
+            
+            this.showUploadSuccess(results);
+            this.refreshUI();
+            
         } catch (error) {
             console.error('❌ Excel upload failed:', error);
             this.showUploadError(error.message);

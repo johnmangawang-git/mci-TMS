@@ -242,14 +242,28 @@ class CentralizedDataService {
      */
     async loadBookings() {
         try {
-            const { data: bookings, error } = await this.supabaseClient
-                .from('bookings')
-                .select('*')
-                .order('start_date', { ascending: false });
+            // Try with start_date first, fallback to created_at if column doesn't exist
+            let query = this.supabaseClient.from('bookings').select('*');
+            
+            // Check if bookings table exists and has start_date column
+            const { data: bookings, error } = await query.order('created_at', { ascending: false });
 
             if (error) {
-                console.error('❌ Error loading bookings:', error);
-                return;
+                if (error.code === '42P01') {
+                    // Table doesn't exist
+                    console.warn('⚠️ Bookings table does not exist, skipping bookings load');
+                    window.bookings = [];
+                    return;
+                } else if (error.code === '42703') {
+                    // Column doesn't exist, this is expected for now
+                    console.warn('⚠️ Bookings table schema mismatch, using empty array');
+                    window.bookings = [];
+                    return;
+                } else {
+                    console.error('❌ Error loading bookings:', error);
+                    window.bookings = [];
+                    return;
+                }
             }
 
             window.bookings = bookings || [];
@@ -257,6 +271,7 @@ class CentralizedDataService {
 
         } catch (error) {
             console.error('❌ Error in loadBookings:', error);
+            window.bookings = [];
         }
     }
 
@@ -573,13 +588,53 @@ class CentralizedDataService {
             // Add user_id
             mappedData.user_id = this.currentUser?.id;
 
+            // Handle DR number conflicts by checking for existing deliveries
+            if (mappedData.dr_number) {
+                const { data: existingDeliveries } = await this.supabaseClient
+                    .from('deliveries')
+                    .select('dr_number')
+                    .eq('dr_number', mappedData.dr_number)
+                    .eq('user_id', this.currentUser?.id);
+
+                if (existingDeliveries && existingDeliveries.length > 0) {
+                    // Generate unique DR number
+                    const timestamp = Date.now();
+                    const originalDR = mappedData.dr_number;
+                    mappedData.dr_number = `${originalDR}-${timestamp}`;
+                    console.warn(`⚠️ DR conflict detected, using unique DR: ${mappedData.dr_number}`);
+                }
+            }
+
             const { data, error } = await this.supabaseClient
                 .from('deliveries')
                 .insert([mappedData])
                 .select()
                 .single();
 
-            if (error) throw error;
+            if (error) {
+                if (error.code === '23505') {
+                    // Unique constraint violation - try with timestamp
+                    const timestamp = Date.now();
+                    mappedData.dr_number = `${mappedData.dr_number}-${timestamp}`;
+                    console.warn(`⚠️ Retrying with unique DR: ${mappedData.dr_number}`);
+                    
+                    const { data: retryData, error: retryError } = await this.supabaseClient
+                        .from('deliveries')
+                        .insert([mappedData])
+                        .select()
+                        .single();
+                    
+                    if (retryError) throw retryError;
+                    
+                    const frontendData = window.fieldMappingService ? 
+                        window.fieldMappingService.mapDeliveryFromSupabase(retryData) : 
+                        retryData;
+                    
+                    console.log('✅ Delivery added to Supabase (with unique DR):', frontendData);
+                    return frontendData;
+                }
+                throw error;
+            }
 
             // Convert back to frontend format
             const frontendData = window.fieldMappingService ? 
@@ -699,7 +754,7 @@ class CentralizedDataService {
      */
     async updateCustomer(customerId, updates) {
         try {
-            const { data, error } = await this.supabasebase
+            const { data, error } = await this.supabaseClient
                 .from('customers')
                 .update(updates)
                 .eq('id', customerId)

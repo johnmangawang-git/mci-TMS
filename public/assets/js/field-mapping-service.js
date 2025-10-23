@@ -36,22 +36,26 @@ class FieldMappingService {
             'truck_plate_number': 'truck_plate_number',
             'truckPlate': 'truck_plate_number',
             
-            // Date mappings
+            // Date mappings (COMPREHENSIVE - matches definitive schema)
             'deliveryDate': 'delivery_date',
             'delivery_date': 'delivery_date',
             'created_date': 'created_date',
             'createdDate': 'created_date',
-            'completedDate': 'completed_at',
-            'completed_date': 'completed_at',
-            'completedDateTime': 'completed_at',
-            'completedTimestamp': 'completed_at',
+            'completedDate': 'completed_date',
+            'completed_date': 'completed_date',
+            'completedDateTime': 'completed_datetime',
+            'completed_datetime': 'completed_datetime',
+            'completedTimestamp': 'completed_timestamp',
+            'completed_timestamp': 'completed_timestamp',
+            'completedAt': 'completed_at',
+            'completed_at': 'completed_at',
             
             // Cost mappings
             'additionalCosts': 'additional_costs',
             'additional_costs': 'additional_costs',
             'additionalCostItems': 'additional_data',
             
-            // Item mappings
+            // Item mappings (REQUIRED by Excel uploads)
             'itemNumber': 'item_number',
             'item_number': 'item_number',
             'itemDescription': 'item_description',
@@ -61,12 +65,22 @@ class FieldMappingService {
             'mobileNumber': 'mobile_number',
             'mobile_number': 'mobile_number',
             
+            // Signature mappings
+            'signatureData': 'signature_data',
+            'signature_data': 'signature_data',
+            
             // System mappings
             'timestamp': 'created_at',
             'createdBy': 'created_by',
             'created_by': 'created_by',
             'userId': 'user_id',
-            'user_id': 'user_id'
+            'user_id': 'user_id',
+            
+            // Sync tracking
+            'lastSynced': 'last_synced',
+            'last_synced': 'last_synced',
+            'syncVersion': 'sync_version',
+            'sync_version': 'sync_version'
         };
 
         this.customerFieldMap = {
@@ -86,8 +100,22 @@ class FieldMappingService {
             'vendor_number': 'vendor_number',
             'contactPerson': 'contact_person',
             'contact_person': 'contact_person',
+            'companyType': 'company_type',
+            'company_type': 'company_type',
+            'accountType': 'account_type',
+            'account_type': 'account_type',
+            'notes': 'notes',
+            'status': 'status',
+            'bookingsCount': 'bookings_count',
+            'bookings_count': 'bookings_count',
+            'lastDelivery': 'last_delivery',
+            'last_delivery': 'last_delivery',
             'userId': 'user_id',
-            'user_id': 'user_id'
+            'user_id': 'user_id',
+            'lastSynced': 'last_synced',
+            'last_synced': 'last_synced',
+            'syncVersion': 'sync_version',
+            'sync_version': 'sync_version'
         };
 
         this.reverseDeliveryMap = this.createReverseMap(this.deliveryFieldMap);

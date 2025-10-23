@@ -105,10 +105,12 @@ console.log('app.js loaded');
     function updateDeliveryStatusById(deliveryId, newStatus) {
         console.log(`Updating status for delivery ${deliveryId} to ${newStatus}`);
         
-        // Find the delivery and update its status (handle both id formats)
-        const deliveryIndex = activeDeliveries.findIndex(d => 
-            d.id === deliveryId || d.delivery_id === deliveryId || 
-            String(d.id) === String(deliveryId));
+        // Find the delivery and update its status using field mapping service
+        const deliveryIndex = window.fieldMappingService ? 
+            window.fieldMappingService.findDeliveryIndexById(activeDeliveries, deliveryId) :
+            activeDeliveries.findIndex(d => 
+                d.id === deliveryId || d.delivery_id === deliveryId || 
+                String(d.id) === String(deliveryId));
         if (deliveryIndex !== -1) {
             const oldStatus = activeDeliveries[deliveryIndex].status;
             activeDeliveries[deliveryIndex].status = newStatus;

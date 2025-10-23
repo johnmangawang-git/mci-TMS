@@ -190,9 +190,21 @@ class CentralizedDataService {
                 return;
             }
 
+            // Convert to frontend format using field mapping
+            const mappedDeliveries = deliveries.map(delivery => 
+                window.fieldMappingService ? 
+                window.fieldMappingService.mapDeliveryFromSupabase(delivery) : 
+                delivery
+            );
+
+            // Normalize arrays for consistent format
+            const normalizedDeliveries = window.fieldMappingService ? 
+                window.fieldMappingService.normalizeDeliveryArray(mappedDeliveries) : 
+                mappedDeliveries;
+
             // Separate active and completed deliveries
-            window.activeDeliveries = deliveries.filter(d => d.status !== 'Completed' && d.status !== 'Signed') || [];
-            window.deliveryHistory = deliveries.filter(d => d.status === 'Completed' || d.status === 'Signed') || [];
+            window.activeDeliveries = normalizedDeliveries.filter(d => d.status !== 'Completed' && d.status !== 'Signed') || [];
+            window.deliveryHistory = normalizedDeliveries.filter(d => d.status === 'Completed' || d.status === 'Signed') || [];
 
             console.log(`📦 Loaded ${window.activeDeliveries.length} active deliveries`);
             console.log(`📋 Loaded ${window.deliveryHistory.length} completed deliveries`);
@@ -553,19 +565,29 @@ class CentralizedDataService {
      */
     async addDelivery(deliveryData) {
         try {
+            // Use field mapping service to convert to Supabase format
+            const mappedData = window.fieldMappingService ? 
+                window.fieldMappingService.mapDeliveryToSupabase(deliveryData) : 
+                deliveryData;
+
+            // Add user_id
+            mappedData.user_id = this.currentUser?.id;
+
             const { data, error } = await this.supabaseClient
                 .from('deliveries')
-                .insert([{
-                    ...deliveryData,
-                    user_id: this.currentUser?.id
-                }])
+                .insert([mappedData])
                 .select()
                 .single();
 
             if (error) throw error;
 
-            console.log('✅ Delivery added to Supabase:', data);
-            return data;
+            // Convert back to frontend format
+            const frontendData = window.fieldMappingService ? 
+                window.fieldMappingService.mapDeliveryFromSupabase(data) : 
+                data;
+
+            console.log('✅ Delivery added to Supabase:', frontendData);
+            return frontendData;
 
         } catch (error) {
             console.error('❌ Error adding delivery:', error);

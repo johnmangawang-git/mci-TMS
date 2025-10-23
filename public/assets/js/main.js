@@ -2443,11 +2443,8 @@ window.testLogoutButton = function() {
 window.saveProfileSettings = saveProfileSettings;
 window.getInitials = getInitials;
 window.updateUIWithUserData = updateUIWithUserData;
-// 
-========================================
-// CLEAN LOGOUT IMPLEMENTATION - REWRITTEN
-// ========================================
 
+// CLEAN LOGOUT IMPLEMENTATION - REWRITTEN
 // Simple, reliable logout function
 function performLogout() {
     console.log('🔴 LOGOUT: Starting logout process...');

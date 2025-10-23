@@ -49,8 +49,29 @@ async function initAnalyticsCharts(period = 'day') {
     // Initialize chart filters
     initChartFilters();
 
-    // Load actual data
-    const data = await loadAnalyticsData(period);
+    // Load actual data with error handling
+    let data;
+    try {
+        data = await loadAnalyticsData(period);
+    } catch (error) {
+        console.error('❌ Error loading analytics data:', error);
+        // Use fallback data
+        data = {
+            bookings: { labels: ['No Data'], values: [0] },
+            costs: { labels: ['No Data'], values: [0] },
+            origins: { labels: ['No Data'], values: [0] }
+        };
+    }
+
+    // Ensure data structure is valid
+    if (!data || !data.bookings || !data.bookings.labels) {
+        console.warn('⚠️ Invalid analytics data structure, using fallback');
+        data = {
+            bookings: { labels: ['No Data'], values: [0] },
+            costs: { labels: ['No Data'], values: [0] },
+            origins: { labels: ['No Data'], values: [0] }
+        };
+    }
 
     // Bookings Chart - Total bookings per month/week/day
     const bookingsCtx = document.getElementById('bookingsChart');
@@ -58,7 +79,7 @@ async function initAnalyticsCharts(period = 'day') {
         bookingsChart = new Chart(bookingsCtx, {
             type: 'bar',
             data: {
-                labels: data.bookings.labels,
+                labels: data.bookings.labels || ['No Data'],
                 datasets: [{
                     label: 'Bookings',
                     data: data.bookings.values,

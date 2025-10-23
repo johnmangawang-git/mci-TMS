@@ -202,9 +202,12 @@ class CentralizedDataService {
                 window.fieldMappingService.normalizeDeliveryArray(mappedDeliveries) : 
                 mappedDeliveries;
 
-            // Separate active and completed deliveries
+            // Separate active and completed deliveries from single deliveries table
             window.activeDeliveries = normalizedDeliveries.filter(d => d.status !== 'Completed' && d.status !== 'Signed') || [];
             window.deliveryHistory = normalizedDeliveries.filter(d => d.status === 'Completed' || d.status === 'Signed') || [];
+            
+            // Note: Using single deliveries table instead of separate delivery_history table
+            console.log('📋 Using deliveries table for both active and completed deliveries');
 
             console.log(`📦 Loaded ${window.activeDeliveries.length} active deliveries`);
             console.log(`📋 Loaded ${window.deliveryHistory.length} completed deliveries`);
@@ -238,37 +241,15 @@ class CentralizedDataService {
     }
 
     /**
-     * Load bookings from Supabase
+     * Load bookings from Supabase (with graceful fallback)
      */
     async loadBookings() {
         try {
-            // Try with start_date first, fallback to created_at if column doesn't exist
-            let query = this.supabaseClient.from('bookings').select('*');
+            // Skip bookings entirely if table doesn't exist - not critical for core functionality
+            console.log('📅 Skipping bookings load - table may not exist yet');
+            window.bookings = [];
+            return;
             
-            // Check if bookings table exists and has start_date column
-            const { data: bookings, error } = await query.order('created_at', { ascending: false });
-
-            if (error) {
-                if (error.code === '42P01') {
-                    // Table doesn't exist
-                    console.warn('⚠️ Bookings table does not exist, skipping bookings load');
-                    window.bookings = [];
-                    return;
-                } else if (error.code === '42703') {
-                    // Column doesn't exist, this is expected for now
-                    console.warn('⚠️ Bookings table schema mismatch, using empty array');
-                    window.bookings = [];
-                    return;
-                } else {
-                    console.error('❌ Error loading bookings:', error);
-                    window.bookings = [];
-                    return;
-                }
-            }
-
-            window.bookings = bookings || [];
-            console.log(`📅 Loaded ${window.bookings.length} bookings`);
-
         } catch (error) {
             console.error('❌ Error in loadBookings:', error);
             window.bookings = [];

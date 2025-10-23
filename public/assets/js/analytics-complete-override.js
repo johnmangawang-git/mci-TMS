@@ -132,12 +132,23 @@ console.log('🚨 ANALYTICS COMPLETE OVERRIDE LOADING...');
         'initializeAdditionalCostsAnalysisFix'
     ];
     
-    // Override each function in the blacklist
+    // Override each function in the blacklist with safe approach
     analyticsBlacklist.forEach(funcName => {
-        window[funcName] = function() {
-            console.log(`🔧 Analytics Override: ${funcName} called safely (original disabled)`);
-            return Promise.resolve();
-        };
+        try {
+            if (!window[funcName] || typeof window[funcName] !== 'function') {
+                window[funcName] = function() {
+                    console.log(`🔧 Analytics Override: ${funcName} called safely (original disabled)`);
+                    return Promise.resolve({
+                        costs: { labels: ['No Data'], values: [1] },
+                        origin: { labels: ['No Data'], values: [1] },
+                        destination: { labels: ['No Data'], values: [1] },
+                        trends: { labels: ['No Data'], values: [1] }
+                    });
+                };
+            }
+        } catch (error) {
+            console.warn(`⚠️ Could not override ${funcName}:`, error.message);
+        }
     });
     
     // Disable Chart.js completely to prevent any chart creation

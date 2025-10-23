@@ -84,12 +84,8 @@ console.log('🚨 NUCLEAR ERROR SUPPRESSION LOADING...');
             });
         };
         
-        // Make it non-configurable so it can't be overwritten
-        Object.defineProperty(window, funcName, {
-            value: window[funcName],
-            writable: false,
-            configurable: false
-        });
+        // Allow overrides but don't make them non-configurable
+        // This prevents the "read only property" error
     });
     
     console.log('✅ NUCLEAR ERROR SUPPRESSION LOADED - All analytics errors will be suppressed');

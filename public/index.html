@@ -168,6 +168,12 @@
     <!-- FIX DATA DUPLICATION - Prevents delivery history duplication and handles 406 errors -->
     <script src="assets/js/fix-data-duplication.js"></script>
     
+    <!-- DISABLE CENTRALIZED OVERRIDES - Prevent localStorage blocking -->
+    <script>
+        window.CENTRALIZED_OVERRIDES_DISABLED = true;
+        console.log('🔧 Centralized overrides disabled');
+    </script>
+    
     <!-- INLINE TEST - Direct test without external files -->
     <script>
         console.log('🚨 INLINE TEST LOADING...');

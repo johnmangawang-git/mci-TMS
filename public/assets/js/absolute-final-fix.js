@@ -40,6 +40,42 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
     // Create a mock instance
     window.dataService = new window.CentralizedDataService();
     
+    // CRITICAL: Completely disable localStorage blocking
+    console.log('🔧 Disabling localStorage blocking...');
+    
+    // Prevent centralized-function-overrides.js from loading
+    window.CENTRALIZED_OVERRIDES_DISABLED = true;
+    
+    // Restore original localStorage functions if they were overridden
+    setTimeout(() => {
+        // Check if localStorage was overridden and restore it
+        const testKey = 'test-restore-' + Date.now();
+        try {
+            localStorage.setItem(testKey, 'test');
+            const result = localStorage.getItem(testKey);
+            localStorage.removeItem(testKey);
+            
+            if (result !== 'test') {
+                console.log('🔧 localStorage is blocked, attempting to restore...');
+                
+                // Try to find and restore original functions
+                if (window.CentralizedFunctionOverrides && window.CentralizedFunctionOverrides.originalFunctions) {
+                    const original = window.CentralizedFunctionOverrides.originalFunctions.localStorage;
+                    if (original) {
+                        localStorage.setItem = original.setItem;
+                        localStorage.getItem = original.getItem;
+                        localStorage.removeItem = original.removeItem;
+                        console.log('✅ localStorage functions restored');
+                    }
+                }
+            } else {
+                console.log('✅ localStorage is working normally');
+            }
+        } catch (error) {
+            console.warn('⚠️ Error testing localStorage:', error);
+        }
+    }, 100);
+    
     // STEP 3: Clear ALL localStorage data to prevent duplication
     console.log('🔧 Clearing all localStorage data');
     try {

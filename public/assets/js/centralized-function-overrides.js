@@ -4,7 +4,13 @@
  * Ensures complete transition to Supabase-centric operations
  */
 
-console.log('🔄 Loading Centralized Function Overrides...');
+// Check if centralized overrides are disabled
+if (window.CENTRALIZED_OVERRIDES_DISABLED) {
+    console.log('🚫 Centralized Function Overrides DISABLED - localStorage will work normally');
+    // Exit early without doing anything
+} else {
+    console.log('🔄 Loading Centralized Function Overrides...');
+}
 
 class CentralizedFunctionOverrides {
     constructor() {
@@ -481,8 +487,12 @@ class CentralizedFunctionOverrides {
     }
 }
 
-// Create global instance
-window.centralizedFunctionOverrides = new CentralizedFunctionOverrides();
+// Create global instance only if not disabled
+if (!window.CENTRALIZED_OVERRIDES_DISABLED) {
+    window.centralizedFunctionOverrides = new CentralizedFunctionOverrides();
+} else {
+    console.log('✅ Centralized Function Overrides completely disabled - localStorage works normally');
+}
 
 // Export for debugging
 window.debugCentralizedOverrides = () => {

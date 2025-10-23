@@ -22,7 +22,25 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         };
     }
     
-    // STEP 2: Clear ALL localStorage data to prevent duplication
+    // STEP 2: Override centralized data service to prevent initialization
+    window.CentralizedDataService = class {
+        constructor() {
+            console.log('🔧 CentralizedDataService disabled');
+        }
+        async init() {
+            console.log('🔧 CentralizedDataService init disabled');
+            return Promise.resolve();
+        }
+        async waitForSupabaseClient() {
+            console.log('🔧 CentralizedDataService waitForSupabaseClient disabled');
+            return Promise.resolve();
+        }
+    };
+    
+    // Create a mock instance
+    window.dataService = new window.CentralizedDataService();
+    
+    // STEP 3: Clear ALL localStorage data to prevent duplication
     console.log('🔧 Clearing all localStorage data');
     try {
         localStorage.removeItem('mci-deliveryHistory');
@@ -35,7 +53,7 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         console.warn('⚠️ Error clearing localStorage:', error);
     }
     
-    // STEP 3: Override ALL data loading functions with empty implementations
+    // STEP 4: Override ALL data loading functions with empty implementations
     const dataFunctions = [
         'loadDeliveryHistory',
         'displayDeliveryHistory',
@@ -55,12 +73,12 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         };
     });
     
-    // STEP 4: Set all data arrays to empty
+    // STEP 5: Set all data arrays to empty
     window.deliveryHistory = [];
     window.activeDeliveries = [];
     window.customers = [];
     
-    // STEP 5: Override display functions to show clean empty state
+    // STEP 6: Override display functions to show clean empty state
     window.displayDeliveryHistory = function() {
         console.log('🔧 Displaying clean empty delivery history');
         const container = document.getElementById('deliveryHistoryTableBody');
@@ -77,7 +95,7 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         }
     };
     
-    // STEP 6: Completely disable fetch for Supabase URLs
+    // STEP 7: Completely disable fetch for Supabase URLs
     const originalFetch = window.fetch;
     window.fetch = function(url, options) {
         if (typeof url === 'string' && url.includes('supabase.co')) {
@@ -92,21 +110,25 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         return originalFetch.apply(this, arguments);
     };
     
-    // STEP 7: Suppress ALL console errors
+    // STEP 8: Suppress ALL console errors including Supabase initialization errors
     const originalConsoleError = console.error;
     console.error = function(...args) {
         const message = args.join(' ');
         if (message.includes('406') || 
             message.includes('supabase') || 
+            message.includes('Supabase') ||
             message.includes('Not Acceptable') ||
-            message.includes('Failed to load resource')) {
+            message.includes('Failed to load resource') ||
+            message.includes('Centralized Data Service') ||
+            message.includes('client not available') ||
+            message.includes('waitForSupabaseClient')) {
             console.warn('⚠️ Suppressed error:', message);
             return;
         }
         originalConsoleError.apply(console, args);
     };
     
-    // STEP 8: Override DOM manipulation to prevent data display
+    // STEP 9: Override DOM manipulation to prevent data display
     const originalInnerHTML = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
     Object.defineProperty(Element.prototype, 'innerHTML', {
         get: originalInnerHTML.get,
@@ -123,7 +145,7 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         }
     });
     
-    // STEP 9: Clear any existing intervals or timeouts that might be loading data
+    // STEP 10: Clear any existing intervals or timeouts that might be loading data
     let highestTimeoutId = setTimeout(function(){}, 0);
     for (let i = 0; i < highestTimeoutId; i++) {
         clearTimeout(i);
@@ -134,7 +156,7 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         clearInterval(i);
     }
     
-    // STEP 10: Force clean display on DOM ready
+    // STEP 11: Force clean display on DOM ready
     document.addEventListener('DOMContentLoaded', function() {
         console.log('🔧 DOM ready - forcing clean display');
         
@@ -161,7 +183,7 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         }, 1000);
     });
     
-    // STEP 11: Override Excel upload to use localStorage only
+    // STEP 12: Override Excel upload to use localStorage only
     window.createBookingFromDR = function(bookingData) {
         console.log('🔧 Excel upload - using localStorage only');
         

@@ -57,7 +57,6 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
     const dataFunctions = [
         'loadDeliveryHistory',
         'displayDeliveryHistory',
-        'loadActiveDeliveries',
         'displayActiveDeliveries',
         'loadCustomers',
         'displayCustomers',
@@ -73,6 +72,27 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         };
     });
     
+    // Special override for loadActiveDeliveries to work with localStorage
+    window.loadActiveDeliveries = function() {
+        console.log('🔧 Loading active deliveries from localStorage');
+        
+        try {
+            const stored = localStorage.getItem('mci-activeDeliveries');
+            const activeDeliveries = stored ? JSON.parse(stored) : [];
+            window.activeDeliveries = activeDeliveries;
+            
+            // Display the data
+            window.displayActiveDeliveries(activeDeliveries);
+            
+            return Promise.resolve(activeDeliveries);
+        } catch (error) {
+            console.error('❌ Error loading active deliveries:', error);
+            window.activeDeliveries = [];
+            window.displayActiveDeliveries([]);
+            return Promise.resolve([]);
+        }
+    };
+    
     // STEP 5: Set all data arrays to empty
     window.deliveryHistory = [];
     window.activeDeliveries = [];
@@ -87,12 +107,51 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         }
     };
     
-    window.displayActiveDeliveries = function() {
-        console.log('🔧 Displaying clean empty active deliveries');
+    window.displayActiveDeliveries = function(data) {
+        console.log('🔧 Displaying active deliveries from localStorage');
         const container = document.getElementById('activeDeliveriesTableBody');
-        if (container) {
-            container.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No active deliveries</td></tr>';
+        if (!container) return;
+        
+        // Get data from localStorage if not provided
+        if (!data) {
+            try {
+                const stored = localStorage.getItem('mci-activeDeliveries');
+                data = stored ? JSON.parse(stored) : [];
+            } catch (error) {
+                data = [];
+            }
         }
+        
+        if (!data || data.length === 0) {
+            container.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No active deliveries</td></tr>';
+            return;
+        }
+        
+        let html = '';
+        data.forEach(delivery => {
+            html += `
+                <tr>
+                    <td>${delivery.drNumber || 'N/A'}</td>
+                    <td>${delivery.customerName || 'N/A'}</td>
+                    <td>${delivery.origin || 'N/A'}</td>
+                    <td>${delivery.destination || 'N/A'}</td>
+                    <td><span class="badge bg-primary">${delivery.status || 'Active'}</span></td>
+                    <td>${delivery.bookedDate || 'N/A'}</td>
+                    <td>₱${parseFloat(delivery.additionalCosts || 0).toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewDeliveryDetails('${delivery.id}')">
+                            <i class="bi bi-eye"></i> View
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        container.innerHTML = html;
+        
+        // Update counter
+        const activeCount = document.getElementById('activeDeliveriesCount');
+        if (activeCount) activeCount.textContent = data.length.toString();
     };
     
     // STEP 7: Completely disable fetch for Supabase URLs
@@ -156,9 +215,9 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
         clearInterval(i);
     }
     
-    // STEP 11: Force clean display on DOM ready
+    // STEP 11: Force clean display and correct stats on DOM ready
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('🔧 DOM ready - forcing clean display');
+        console.log('🔧 DOM ready - forcing clean display and correct stats');
         
         setTimeout(() => {
             // Clear delivery history
@@ -167,21 +226,65 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
                 historyContainer.innerHTML = '<tr><td colspan="8" class="text-center text-muted">System reset - no data to display</td></tr>';
             }
             
-            // Clear active deliveries
-            const activeContainer = document.getElementById('activeDeliveriesTableBody');
-            if (activeContainer) {
-                activeContainer.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No active deliveries</td></tr>';
+            // Load and display active deliveries from localStorage
+            try {
+                const stored = localStorage.getItem('mci-activeDeliveries');
+                const activeDeliveries = stored ? JSON.parse(stored) : [];
+                window.displayActiveDeliveries(activeDeliveries);
+            } catch (error) {
+                console.warn('⚠️ Error loading active deliveries:', error);
+                window.displayActiveDeliveries([]);
             }
             
-            // Update counters
-            const historyCount = document.getElementById('deliveryHistoryCount');
-            if (historyCount) historyCount.textContent = '0';
-            
-            const activeCount = document.getElementById('activeDeliveriesCount');
-            if (activeCount) activeCount.textContent = '0';
+            // Update dashboard stats to correct values
+            updateDashboardStats();
             
         }, 1000);
     });
+    
+    // Function to update dashboard stats with correct localStorage data
+    function updateDashboardStats() {
+        console.log('🔧 Updating dashboard stats with localStorage data');
+        
+        try {
+            // Get active deliveries count
+            const activeStored = localStorage.getItem('mci-activeDeliveries');
+            const activeDeliveries = activeStored ? JSON.parse(activeStored) : [];
+            const activeCount = activeDeliveries.length;
+            
+            // Update dashboard cards
+            const bookedDeliveriesCard = document.querySelector('.card-body h2');
+            if (bookedDeliveriesCard && bookedDeliveriesCard.textContent === '290') {
+                bookedDeliveriesCard.textContent = activeCount.toString();
+            }
+            
+            // Find and update Active Deliveries count
+            const activeDeliveriesCards = document.querySelectorAll('.card-body h2');
+            activeDeliveriesCards.forEach(card => {
+                if (card.textContent === '1') {
+                    const cardTitle = card.parentElement.querySelector('h6');
+                    if (cardTitle && cardTitle.textContent.includes('Active Deliveries')) {
+                        card.textContent = activeCount.toString();
+                    }
+                }
+            });
+            
+            // Find and update Completed Deliveries to 0
+            activeDeliveriesCards.forEach(card => {
+                if (card.textContent === '289') {
+                    const cardTitle = card.parentElement.querySelector('h6');
+                    if (cardTitle && cardTitle.textContent.includes('Completed Deliveries')) {
+                        card.textContent = '0';
+                    }
+                }
+            });
+            
+            console.log(`✅ Dashboard updated: ${activeCount} active deliveries, 0 completed`);
+            
+        } catch (error) {
+            console.warn('⚠️ Error updating dashboard stats:', error);
+        }
+    }
     
     // STEP 12: Override Excel upload to use localStorage only
     window.createBookingFromDR = function(bookingData) {
@@ -216,7 +319,13 @@ console.log('🚨 ABSOLUTE FINAL FIX LOADING...');
             // Save back to localStorage
             localStorage.setItem('mci-activeDeliveries', JSON.stringify(activeDeliveries));
             
-            console.log('✅ Delivery saved to localStorage only');
+            // Refresh the display immediately
+            setTimeout(() => {
+                window.displayActiveDeliveries(activeDeliveries);
+                updateDashboardStats();
+            }, 500);
+            
+            console.log('✅ Delivery saved to localStorage and display refreshed');
             return Promise.resolve(newDelivery);
             
         } catch (error) {

@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <!-- Content Security Policy to allow necessary connections while maintaining security -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' ws://localhost:8088 http://localhost:8088 https://ntyvrezyhrmflswxefbk.supabase.co https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://unpkg.com https://cdnjs.cloudflare.com; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: https://*.tile.openstreetmap.org; object-src 'none';"
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' ws://localhost:8088 http://localhost:8088 https://ntyvrezyhrmflswxefbk.supabase.co wss://ntyvrezyhrmflswxefbk.supabase.co https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://unpkg.com https://cdnjs.cloudflare.com; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: https://*.tile.openstreetmap.org; object-src 'none';"
     <title>MCI App</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="manifest" href="/manifest.json">
@@ -158,6 +158,12 @@
     <!-- CENTRALIZED DATABASE SERVICES - Multi-user synchronized data -->
     <script src="assets/js/centralized-data-service.js"></script>
     <script src="assets/js/centralized-booking-service.js"></script>
+    
+    <!-- CENTRALIZED EXCEL INTEGRATION - Excel uploads through Supabase -->
+    <script src="assets/js/centralized-excel-integration.js"></script>
+    
+    <!-- CENTRALIZED FUNCTION OVERRIDES - Ensures all functions use centralized system -->
+    <script src="assets/js/centralized-function-overrides.js"></script>
     
     <!-- DEFINITIVE SUPABASE FIX - FINAL COMPREHENSIVE SOLUTION -->
     <script src="assets/js/definitive-supabase-fix.js"></script>

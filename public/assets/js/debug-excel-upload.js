@@ -130,37 +130,7 @@ console.log('🚨 DEBUG EXCEL UPLOAD LOADING...');
         };
     }
     
-    // Add a manual test button
-    setTimeout(() => {
-        const testButton = document.createElement('button');
-        testButton.textContent = 'TEST EXCEL UPLOAD';
-        testButton.style.position = 'fixed';
-        testButton.style.top = '10px';
-        testButton.style.right = '10px';
-        testButton.style.zIndex = '9999';
-        testButton.style.backgroundColor = 'red';
-        testButton.style.color = 'white';
-        testButton.style.padding = '10px';
-        testButton.style.border = 'none';
-        testButton.style.borderRadius = '5px';
-        
-        testButton.onclick = function() {
-            console.log('🔧 DEBUG: Manual test button clicked');
-            
-            const testData = {
-                drNumber: 'TEST-' + Date.now(),
-                customerName: 'Manual Test Customer',
-                origin: 'Test Origin',
-                destination: 'Test Destination',
-                additionalCosts: 100
-            };
-            
-            window.createBookingFromDR(testData);
-        };
-        
-        document.body.appendChild(testButton);
-        console.log('✅ DEBUG: Test button added to page');
-    }, 2000);
+
     
     console.log('✅ DEBUG EXCEL UPLOAD LOADED');
 })();

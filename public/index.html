@@ -31,8 +31,8 @@
     <!-- Supabase Configuration -->
     <script>
         // Set Supabase configuration from environment variables or defaults
-        window.SUPABASE_URL = window.SUPABASE_URL || 'https://ntyvrezyhrmflswxefbk.supabase.co';
-        window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50eXZyZXp5aHJtZmxzd3hlZmJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjUzNTgsImV4cCI6MjA3MDY0MTM1OH0.JX0YP42_40lKQ1ghUmIA_Lu0YVZB_Ytl0EdQinU0Nm4';
+        window.SUPABASE_URL = '%SUPABASE_URL%';
+        window.SUPABASE_ANON_KEY = '%SUPABASE_ANON_KEY%';
         
         // CDN Fallback Functions - Senior Developer Implementation
         function loadLocalBootstrapCSS() {
@@ -174,84 +174,7 @@
         console.log('🔧 Centralized overrides disabled');
     </script>
     
-    <!-- INLINE TEST - Direct test without external files -->
-    <script>
-        console.log('🚨 INLINE TEST LOADING...');
-        
-        setTimeout(() => {
-            console.log('🔧 INLINE: Creating test button...');
-            
-            const testBtn = document.createElement('button');
-            testBtn.textContent = '🚨 INLINE TEST BUTTON 🚨';
-            testBtn.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 99999;
-                background: red;
-                color: white;
-                padding: 15px;
-                border: none;
-                border-radius: 5px;
-                font-size: 16px;
-                cursor: pointer;
-            `;
-            
-            testBtn.onclick = function() {
-                console.log('🔧 INLINE: Test button clicked!');
-                
-                try {
-                    // Test localStorage
-                    const testData = {
-                        id: 'INLINE-' + Date.now(),
-                        drNumber: 'INLINE-TEST-' + Date.now(),
-                        customerName: 'Inline Test Customer',
-                        origin: 'Inline Origin',
-                        destination: 'Inline Destination',
-                        status: 'Active',
-                        bookedDate: new Date().toISOString().split('T')[0],
-                        additionalCosts: 456
-                    };
-                    
-                    const stored = localStorage.getItem('mci-activeDeliveries');
-                    const existing = stored ? JSON.parse(stored) : [];
-                    existing.push(testData);
-                    
-                    localStorage.setItem('mci-activeDeliveries', JSON.stringify(existing));
-                    
-                    console.log('✅ INLINE: Test data saved:', testData);
-                    console.log('✅ INLINE: Total count:', existing.length);
-                    
-                    alert(`✅ INLINE TEST SUCCESS!\nDR: ${testData.drNumber}\nTotal: ${existing.length} deliveries`);
-                    
-                    // Try to update dashboard
-                    const cards = document.querySelectorAll('.card-body h2');
-                    cards.forEach(card => {
-                        if (card.textContent === '290') {
-                            card.textContent = existing.length.toString();
-                            card.style.color = 'red';
-                            console.log('✅ INLINE: Updated 290 to', existing.length);
-                        }
-                        if (card.textContent === '289') {
-                            card.textContent = '0';
-                            card.style.color = 'red';
-                            console.log('✅ INLINE: Updated 289 to 0');
-                        }
-                    });
-                    
-                } catch (error) {
-                    console.error('❌ INLINE: Error:', error);
-                    alert('❌ INLINE TEST FAILED: ' + error.message);
-                }
-            };
-            
-            document.body.appendChild(testBtn);
-            console.log('✅ INLINE: Test button added');
-            
-        }, 2000);
-        
-        console.log('✅ INLINE TEST READY');
-    </script>
+
     
     <!-- FORCE DASHBOARD FIX - Aggressively fixes dashboard numbers -->
     <script src="assets/js/force-dashboard-fix.js"></script>
@@ -262,7 +185,7 @@
     <!-- ABSOLUTE FINAL FIX - Must load FIRST to completely reset system -->
     <script src="assets/js/absolute-final-fix.js"></script>
     
-    <!-- EXCEL UPLOAD ACTIVE DELIVERIES FIX - Fixes red test button + Excel uploads not showing -->
+    <!-- EXCEL UPLOAD ACTIVE DELIVERIES FIX - Fixes Excel uploads not showing -->
     <script src="assets/js/excel-upload-active-deliveries-fix.js"></script>
     
     <!-- ULTIMATE FIX - Must load FIRST to override all problematic functions -->
@@ -614,12 +537,6 @@
                     const confirmBtn = document.getElementById('confirmDrUploadBtn');
                     if (confirmBtn) {
                         confirmBtn.disabled = false;
-                        confirmBtn.onclick = function() {
-                            console.log('🚀 INLINE: Confirm button clicked');
-                            if (window.pendingDRData) {
-                                processInlineUpload(window.pendingDRData);
-                            }
-                        };
                         console.log('✅ INLINE PREVIEW: Confirm button enabled');
                     }
                     
@@ -1034,6 +951,9 @@ The page will refresh to show your new data.`);
 </head>
 
 <body>
+    <div id="offline-banner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; background-color: #dc3545; color: white; text-align: center; padding: 10px; z-index: 10000;">
+        Offline mode — changes will sync when back online.
+    </div>
     <script>
         // Check if user is authenticated before loading the app
         document.addEventListener('DOMContentLoaded', async function () {
@@ -1440,10 +1360,10 @@ The page will refresh to show your new data.`);
                             <button class="btn btn-outline-secondary" id="exportDeliveryHistoryBtn"><i
                                     class="bi bi-download"></i> Export</button>
                             <!-- Delete functionality buttons -->
-                            <button class="btn btn-danger btn-sm" id="toggleDeleteModeBtn" onclick="toggleDeliveryHistoryDeleteMode()">
+                            <button class="btn btn-danger btn-sm" id="toggleDeleteModeBtn">
                                 <i class="bi bi-trash"></i> Delete Records
                             </button>
-                            <button class="btn btn-danger btn-sm" id="deleteSelectedHistoryBtn" onclick="deleteSelectedDeliveryHistory()" style="display: none;">
+                            <button class="btn btn-danger btn-sm" id="deleteSelectedHistoryBtn" style="display: none;">
                                 <i class="bi bi-trash-fill"></i> Delete Selected
                             </button>
                         </div>
@@ -2736,6 +2656,42 @@ The page will refresh to show your new data.`);
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleDeleteModeBtn = document.getElementById('toggleDeleteModeBtn');
+            if (toggleDeleteModeBtn) {
+                toggleDeleteModeBtn.addEventListener('click', toggleDeliveryHistoryDeleteMode);
+            }
+
+            const deleteSelectedHistoryBtn = document.getElementById('deleteSelectedHistoryBtn');
+            if (deleteSelectedHistoryBtn) {
+                deleteSelectedHistoryBtn.addEventListener('click', deleteSelectedDeliveryHistory);
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleDeleteModeBtn = document.getElementById('toggleDeleteModeBtn');
+            if (toggleDeleteModeBtn) {
+                toggleDeleteModeBtn.addEventListener('click', toggleDeliveryHistoryDeleteMode);
+            }
+
+            const deleteSelectedHistoryBtn = document.getElementById('deleteSelectedHistoryBtn');
+            if (deleteSelectedHistoryBtn) {
+                deleteSelectedHistoryBtn.addEventListener('click', deleteSelectedDeliveryHistory);
+            }
+
+            const confirmDrUploadBtn = document.getElementById('confirmDrUploadBtn');
+            if (confirmDrUploadBtn) {
+                confirmDrUploadBtn.addEventListener('click', function() {
+                    console.log('🚀 INLINE: Confirm button clicked');
+                    if (window.pendingDRData) {
+                        processInlineUpload(window.pendingDRData);
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -1,52 +1,7 @@
 // 🚀 Excel Upload to Active Deliveries Fix
-// Addresses: Red test button missing + Excel uploads not showing in Active Deliveries
+// Addresses: Excel uploads not showing in Active Deliveries
 
 console.log('🔧 Excel Upload Active Deliveries Fix Loading...');
-
-// STEP 1: Force create red test button immediately
-function createRedTestButton() {
-    console.log('🔧 Creating red test button...');
-    
-    // Remove any existing test button
-    const existingBtn = document.querySelector('#inlineTestBtn');
-    if (existingBtn) existingBtn.remove();
-    
-    const testBtn = document.createElement('button');
-    testBtn.id = 'inlineTestBtn';
-    testBtn.textContent = '🚨 RED TEST BUTTON 🚨';
-    testBtn.style.cssText = `
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        z-index: 9999;
-        background: red !important;
-        color: white !important;
-        border: 3px solid darkred !important;
-        padding: 15px 25px !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
-        border-radius: 8px !important;
-        cursor: pointer !important;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
-    `;
-    
-    testBtn.onclick = function() {
-        console.log('🔧 RED TEST BUTTON CLICKED!');
-        
-        // Test localStorage
-        try {
-            localStorage.setItem('test-button-click', Date.now());
-            console.log('✅ localStorage working!');
-            alert('✅ RED TEST BUTTON WORKS!\n\nlocalStorage: WORKING\nButton: WORKING');
-        } catch (e) {
-            console.error('❌ localStorage blocked:', e);
-            alert('❌ localStorage still blocked: ' + e.message);
-        }
-    };
-    
-    document.body.appendChild(testBtn);
-    console.log('✅ Red test button created and added');
-}
 
 // STEP 2: Fix Active Deliveries data loading
 function fixActiveDeliveriesLoading() {
@@ -55,15 +10,19 @@ function fixActiveDeliveriesLoading() {
     // Override the problematic innerHTML protection for active deliveries
     const activeDeliveriesTable = document.getElementById('activeDeliveriesTableBody');
     if (activeDeliveriesTable) {
-        // Remove the innerHTML protection for active deliveries specifically
+        const originalDescriptor = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+        const originalSetter = originalDescriptor.set;
+
         Object.defineProperty(activeDeliveriesTable, 'innerHTML', {
-            get: function() {
-                return this.innerHTML;
-            },
             set: function(value) {
-                // Allow all data for active deliveries
-                this.innerHTML = value;
-                console.log('✅ Active deliveries data loaded:', value.length, 'characters');
+                if (this._isUpdating) return;
+                this._isUpdating = true;
+                try {
+                    originalSetter.call(this, value);
+                    console.log('✅ Active deliveries data loaded:', value.length, 'characters');
+                } finally {
+                    this._isUpdating = false;
+                }
             },
             configurable: true
         });
@@ -121,9 +80,6 @@ function fixExcelUploadProcessing() {
 function initializeFixes() {
     console.log('🔧 Initializing Excel Upload Active Deliveries fixes...');
     
-    // Create red test button immediately
-    createRedTestButton();
-    
     // Fix active deliveries loading
     fixActiveDeliveriesLoading();
     
@@ -134,7 +90,6 @@ function initializeFixes() {
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
-                createRedTestButton();
                 fixActiveDeliveriesLoading();
             }, 1000);
         });
@@ -149,7 +104,6 @@ initializeFixes();
 // Also run after a delay to ensure everything is loaded
 setTimeout(() => {
     console.log('🔧 Running delayed fixes...');
-    createRedTestButton();
     fixActiveDeliveriesLoading();
 }, 3000);
 

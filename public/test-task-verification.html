@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Verification Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2><i class="bi bi-check-circle"></i> Task Verification Test</h2>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="bi bi-1-circle"></i> Task 1: Additional Costs → Delivery Date</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="task1Results">
+                            <p>Testing column header change...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5><i class="bi bi-2-circle"></i> Task 2: Status Dropdown Options</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="task2Results">
+                            <p>Testing status options...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5><i class="bi bi-3-circle"></i> Task 3: Customer Modal & Auto-Creation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="task3Results">
+                            <p>Testing customer functionality...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Test Sample Data</h5>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary" id="runTestBtn">Run All Tests</button>
+                <button class="btn btn-success" id="testCustomerCreationBtn">Test Customer Auto-Creation</button>
+                <div id="testOutput" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <script>
+        // Test functions
+        function testTask1() {
+            console.log('🧪 Testing Task 1: Additional Costs → Delivery Date');
+            
+            const results = [];
+            
+            // Check if the table header has been changed
+            const tableHeaders = document.querySelectorAll('th');
+            let deliveryDateFound = false;
+            let additionalCostsFound = false;
+            
+            tableHeaders.forEach(th => {
+                if (th.textContent.includes('Delivery Date')) {
+                    deliveryDateFound = true;
+                }
+                if (th.textContent.includes('Additional Costs')) {
+                    additionalCostsFound = true;
+                }
+            });
+            
+            if (deliveryDateFound && !additionalCostsFound) {
+                results.push('✅ Table header changed from "Additional Costs" to "Delivery Date"');
+            } else if (deliveryDateFound && additionalCostsFound) {
+                results.push('⚠️ Both "Delivery Date" and "Additional Costs" found - check for duplicates');
+            } else if (!deliveryDateFound && additionalCostsFound) {
+                results.push('❌ Still showing "Additional Costs" - change not applied');
+            } else {
+                results.push('❌ Neither header found - table structure issue');
+            }
+            
+            // Check if populateActiveDeliveriesTable function handles delivery date
+            if (typeof window.populateActiveDeliveriesTable === 'function') {
+                results.push('✅ populateActiveDeliveriesTable function is available');
+            } else {
+                results.push('❌ populateActiveDeliveriesTable function not found');
+            }
+            
+            document.getElementById('task1Results').innerHTML = results.map(r => `<p>${r}</p>`).join('');
+        }
+        
+        function testTask2() {
+            console.log('🧪 Testing Task 2: Status Dropdown Options');
+            
+            const results = [];
+            const expectedStatuses = ['SUD-Solve Undelivered', 'In Transit', 'Cancelled', 'Active'];
+            
+            // Check if generateStatusOptions function exists and has correct options
+            if (typeof window.generateStatusOptions === 'function') {
+                results.push('✅ generateStatusOptions function is available');
+                
+                // Test the function with a sample delivery ID
+                try {
+                    const statusOptions = window.generateStatusOptions('Active', 'test-id');
+                    
+                    let foundStatuses = [];
+                    expectedStatuses.forEach(status => {
+                        if (statusOptions.includes(status)) {
+                            foundStatuses.push(status);
+                        }
+                    });
+                    
+                    if (foundStatuses.length === expectedStatuses.length) {
+                        results.push('✅ All expected status options found: ' + foundStatuses.join(', '));
+                    } else {
+                        results.push('⚠️ Some status options missing. Found: ' + foundStatuses.join(', '));
+                    }
+                    
+                } catch (error) {
+                    results.push('❌ Error testing generateStatusOptions: ' + error.message);
+                }
+            } else {
+                results.push('❌ generateStatusOptions function not found');
+            }
+            
+            // Check if getStatusInfo function handles new statuses
+            if (typeof window.getStatusInfo === 'function') {
+                results.push('✅ getStatusInfo function is available');
+                
+                expectedStatuses.forEach(status => {
+                    try {
+                        const statusInfo = window.getStatusInfo(status);
+                        if (statusInfo && statusInfo.class && statusInfo.icon) {
+                            results.push(`✅ ${status}: ${statusInfo.class} ${statusInfo.icon}`);
+                        } else {
+                            results.push(`❌ ${status}: Missing status info`);
+                        }
+                    } catch (error) {
+                        results.push(`❌ ${status}: Error - ${error.message}`);
+                    }
+                });
+            } else {
+                results.push('❌ getStatusInfo function not found');
+            }
+            
+            document.getElementById('task2Results').innerHTML = results.map(r => `<p style="font-size: 0.9em;">${r}</p>`).join('');
+        }
+        
+        function testTask3() {
+            console.log('🧪 Testing Task 3: Customer Modal & Auto-Creation');
+            
+            const results = [];
+            
+            // Check if customer modal exists
+            const addCustomerModal = document.getElementById('addCustomerModal');
+            const editCustomerModal = document.getElementById('editCustomerModal');
+            
+            if (addCustomerModal) {
+                results.push('✅ Add Customer Modal found');
+            } else {
+                results.push('❌ Add Customer Modal not found');
+            }
+            
+            if (editCustomerModal) {
+                results.push('✅ Edit Customer Modal found');
+            } else {
+                results.push('❌ Edit Customer Modal not found');
+            }
+            
+            // Check if customer buttons exist
+            const addCustomerBtn = document.getElementById('addCustomerBtn');
+            const saveCustomerBtn = document.getElementById('saveCustomerBtn');
+            
+            if (addCustomerBtn) {
+                results.push('✅ Add Customer Button found');
+            } else {
+                results.push('❌ Add Customer Button not found');
+            }
+            
+            if (saveCustomerBtn) {
+                results.push('✅ Save Customer Button found');
+            } else {
+                results.push('❌ Save Customer Button not found');
+            }
+            
+            // Check if customer functions exist
+            if (typeof window.loadCustomers === 'function') {
+                results.push('✅ loadCustomers function is available');
+            } else {
+                results.push('❌ loadCustomers function not found');
+            }
+            
+            if (typeof window.autoCreateCustomer === 'function') {
+                results.push('✅ autoCreateCustomer function is available');
+            } else {
+                results.push('❌ autoCreateCustomer function not found');
+            }
+            
+            // Check if customers array exists
+            if (window.customers && Array.isArray(window.customers)) {
+                results.push(`✅ Customers array exists with ${window.customers.length} customers`);
+            } else {
+                results.push('❌ Customers array not found or not an array');
+            }
+            
+            document.getElementById('task3Results').innerHTML = results.map(r => `<p>${r}</p>`).join('');
+        }
+        
+        function testCustomerAutoCreation() {
+            console.log('🧪 Testing Customer Auto-Creation from DR Upload');
+            
+            if (typeof window.autoCreateCustomer === 'function') {
+                // Test customer auto-creation
+                const testCustomerData = {
+                    customerName: 'Test Company Ltd',
+                    vendorNumber: 'VENDOR123',
+                    destination: '123 Test Street, Test City'
+                };
+                
+                window.autoCreateCustomer(
+                    testCustomerData.customerName,
+                    testCustomerData.vendorNumber,
+                    testCustomerData.destination
+                ).then(() => {
+                    const output = `
+                        <div class="alert alert-success">
+                            <h6>✅ Customer Auto-Creation Test Successful</h6>
+                            <p><strong>Customer:</strong> ${testCustomerData.customerName}</p>
+                            <p><strong>Vendor Number:</strong> ${testCustomerData.vendorNumber}</p>
+                            <p><strong>Address:</strong> ${testCustomerData.destination}</p>
+                            <p>Check the Customer Management section to see the new customer.</p>
+                        </div>
+                    `;
+                    document.getElementById('testOutput').innerHTML = output;
+                }).catch(error => {
+                    const output = `
+                        <div class="alert alert-danger">
+                            <h6>❌ Customer Auto-Creation Test Failed</h6>
+                            <p><strong>Error:</strong> ${error.message}</p>
+                        </div>
+                    `;
+                    document.getElementById('testOutput').innerHTML = output;
+                });
+            } else {
+                const output = `
+                    <div class="alert alert-warning">
+                        <h6>⚠️ autoCreateCustomer function not available</h6>
+                        <p>The function may not be loaded yet. Try refreshing the page.</p>
+                    </div>
+                `;
+                document.getElementById('testOutput').innerHTML = output;
+            }
+        }
+        
+        function runAllTests() {
+            console.log('🧪 Running all task verification tests...');
+            
+            testTask1();
+            testTask2();
+            testTask3();
+            
+            const output = `
+                <div class="alert alert-info">
+                    <h6>📊 All Tests Completed</h6>
+                    <p>Check the individual task cards above for detailed results.</p>
+                    <p><strong>Next Steps:</strong></p>
+                    <ul>
+                        <li>Test DR upload with Excel file to verify field mapping</li>
+                        <li>Check status dropdown functionality in Active Deliveries</li>
+                        <li>Verify customer auto-creation from DR upload</li>
+                    </ul>
+                </div>
+            `;
+            document.getElementById('testOutput').innerHTML = output;
+        }
+        
+        // Load required scripts and initialize tests
+        function loadScriptsAndInitialize() {
+            const scripts = [
+                'assets/js/app.js',
+                'assets/js/booking.js',
+                'assets/js/customers.js',
+                'assets/js/active-deliveries-display-fix.js'
+            ];
+            
+            let loadedScripts = 0;
+            
+            scripts.forEach(scriptSrc => {
+                const script = document.createElement('script');
+                script.src = scriptSrc;
+                script.onload = () => {
+                    loadedScripts++;
+                    console.log(`✅ Loaded: ${scriptSrc}`);
+                    
+                    if (loadedScripts === scripts.length) {
+                        // All scripts loaded, initialize tests
+                        setTimeout(() => {
+                            document.getElementById('runTestBtn').addEventListener('click', runAllTests);
+                            document.getElementById('testCustomerCreationBtn').addEventListener('click', testCustomerAutoCreation);
+                            
+                            // Run initial tests
+                            runAllTests();
+                        }, 1000);
+                    }
+                };
+                script.onerror = () => {
+                    console.error(`❌ Failed to load: ${scriptSrc}`);
+                    loadedScripts++;
+                    
+                    if (loadedScripts === scripts.length) {
+                        setTimeout(() => {
+                            document.getElementById('runTestBtn').addEventListener('click', runAllTests);
+                            document.getElementById('testCustomerCreationBtn').addEventListener('click', testCustomerAutoCreation);
+                            runAllTests();
+                        }, 1000);
+                    }
+                };
+                document.head.appendChild(script);
+            });
+        }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', loadScriptsAndInitialize);
+    </script>
+</body>
+</html>

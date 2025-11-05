@@ -228,7 +228,7 @@ async function populateActiveDeliveriesTableUnified() {
                     </div>
                 </td>
                 <td>${deliveryDate}</td>
-                <td>₱${delivery.additionalCosts.toFixed(2)}</td>
+                <td>${delivery.deliveryDate || delivery.delivery_date || delivery.created_date || 'N/A'}</td>
                 <td>${delivery.itemNumber || ''}</td>
                 <td>${delivery.mobileNumber || ''}</td>
                 <td>${delivery.itemDescription || ''}</td>
@@ -278,14 +278,15 @@ function generateId() {
 
 function getStatusInfo(status) {
     const statusMap = {
+        'SUD-Solve Undelivered': { class: 'bg-warning', icon: 'bi-exclamation-triangle' },
+        'In Transit': { class: 'bg-primary', icon: 'bi-truck' },
+        'Cancelled': { class: 'bg-danger', icon: 'bi-x-circle' },
+        'Active': { class: 'bg-success', icon: 'bi-check-circle' },
         'On Schedule': { class: 'bg-primary', icon: 'bi-clock' },
-        'Active': { class: 'bg-primary', icon: 'bi-clock' },
-        'In Transit': { class: 'bg-warning', icon: 'bi-truck' },
         'Out for Delivery': { class: 'bg-info', icon: 'bi-truck' },
         'Delivered': { class: 'bg-success', icon: 'bi-check-circle' },
         'Completed': { class: 'bg-success', icon: 'bi-check-circle' },
         'Signed': { class: 'bg-success', icon: 'bi-check-circle' },
-        'Cancelled': { class: 'bg-danger', icon: 'bi-x-circle' },
         'Pending': { class: 'bg-secondary', icon: 'bi-hourglass' }
     };
     
@@ -293,7 +294,7 @@ function getStatusInfo(status) {
 }
 
 function generateStatusOptions(currentStatus, deliveryId) {
-    const statuses = ['On Schedule', 'In Transit', 'Out for Delivery', 'Delivered', 'Completed', 'Cancelled'];
+    const statuses = ['SUD-Solve Undelivered', 'In Transit', 'Cancelled', 'Active'];
     
     return statuses.map(status => {
         const isCurrent = status === currentStatus;

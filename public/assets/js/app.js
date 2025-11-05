@@ -12,10 +12,16 @@ console.log('app.js loaded');
     // Functions
     function getStatusInfo(status) {
         switch (status) {
-            case 'On Schedule':
-                return { class: 'bg-success', icon: 'bi-check-circle' };
+            case 'SUD-Solve Undelivered':
+                return { class: 'bg-warning', icon: 'bi-exclamation-triangle' };
             case 'In Transit':
                 return { class: 'bg-primary', icon: 'bi-truck' };
+            case 'Cancelled':
+                return { class: 'bg-danger', icon: 'bi-x-circle' };
+            case 'Active':
+                return { class: 'bg-success', icon: 'bi-check-circle' };
+            case 'On Schedule':
+                return { class: 'bg-success', icon: 'bi-check-circle' };
             case 'Delayed':
                 return { class: 'bg-warning', icon: 'bi-exclamation-triangle' };
             case 'Completed':
@@ -26,7 +32,7 @@ console.log('app.js loaded');
     }
 
     function generateStatusOptions(currentStatus, deliveryId) {
-        const availableStatuses = ['In Transit', 'On Schedule', 'Delayed'];
+        const availableStatuses = ['SUD-Solve Undelivered', 'In Transit', 'Cancelled', 'Active'];
         if (currentStatus === 'Completed' || currentStatus === 'Signed') {
             return `<div class="status-option disabled">Status cannot be changed</div>`;
         }
@@ -334,7 +340,7 @@ console.log('app.js loaded');
             const truckPlate = delivery.truckPlateNumber || delivery.truck_plate_number || '';
             const truckDisplay = truckType && truckPlate ? `${truckType} (${truckPlate})` : (truckType || truckPlate || 'N/A');
             const createdDate = delivery.created_date || delivery.deliveryDate || delivery.bookedDate || 'N/A';
-            const additionalCosts = delivery.additionalCosts || delivery.additional_costs || 0;
+            const deliveryDate = delivery.deliveryDate || delivery.delivery_date || delivery.created_date || 'N/A';
             const itemNumber = delivery.itemNumber || delivery.item_number || '';
             const mobileNumber = delivery.mobileNumber || delivery.mobile_number || '';
             const itemDescription = delivery.itemDescription || delivery.item_description || '';
@@ -361,7 +367,7 @@ console.log('app.js loaded');
                         </div>
                     </td>
                     <td>${createdDate}</td>
-                    <td>₱${parseFloat(additionalCosts).toFixed(2)}</td>
+                    <td>${deliveryDate}</td>
                     <td>${itemNumber}</td>
                     <td>${mobileNumber}</td>
                     <td>${itemDescription}</td>

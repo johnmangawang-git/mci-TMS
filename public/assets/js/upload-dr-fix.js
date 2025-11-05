@@ -351,12 +351,16 @@ DEBUG INFO:
         // Show first 5 rows as preview
         const previewData = data.slice(0, 5);
         
-        // Try different column name variations
-        const getColumnValue = (row, possibleNames) => {
+        // Use enhanced column mapping if available
+        const getColumnValue = window.getEnhancedColumnValue || function(row, possibleNames, fallbackIndex = null) {
+            // Fallback to simple mapping
             for (const name of possibleNames) {
                 if (row[name] !== undefined && row[name] !== null && row[name] !== '') {
-                    return row[name];
+                    return String(row[name]).trim();
                 }
+            }
+            if (fallbackIndex !== null && row[fallbackIndex] !== undefined && row[fallbackIndex] !== null) {
+                return String(row[fallbackIndex]).trim();
             }
             return 'N/A';
         };
@@ -376,6 +380,10 @@ DEBUG INFO:
                 'Company', 'Customer Company', 'Consignee'
             ]);
             
+            const vendorNumber = getColumnValue(row, [
+                'Vendor', 'vendor_number', 'Vendor Number'
+            ]) || '';
+            
             const origin = getColumnValue(row, [
                 'Origin', 'origin', 'From', 'Source', 'Pickup', 'Start',
                 'Origin Address', 'Pickup Location'
@@ -386,12 +394,35 @@ DEBUG INFO:
                 'Destination Address', 'Delivery Location', 'Drop Location'
             ]);
             
+            // Extract new columns with enhanced mapping and fallback to column indices
+            const itemNumber = getColumnValue(row, [
+                'Item Number', 'Item number', 'item_number', 'Item #', 'Item#'
+            ], 9) || '';
+            
+            const mobileNumber = getColumnValue(row, [
+                'Mobile#', 'Mobile Number', 'Mobile', 'mobile_number'
+            ], 10) || '';
+            
+            const itemDescription = getColumnValue(row, [
+                'Item Description', 'Item description', 'item_description', 'Description'
+            ], 11) || '';
+            
+            const serialNumber = getColumnValue(row, [
+                'Serial Number', 'Serial number', 'serial_number', 'Serial'
+            ], 14) || '';
+            
             tr.innerHTML = `
                 <td>${drNumber}</td>
                 <td>${customer}</td>
+                <td>${vendorNumber}</td>
                 <td>${origin}</td>
                 <td>${destination}</td>
+                <td>${new Date().toLocaleDateString()}</td>
                 <td>Active</td>
+                <td>${itemNumber}</td>
+                <td>${mobileNumber}</td>
+                <td>${itemDescription}</td>
+                <td>${serialNumber}</td>
             `;
             previewTable.appendChild(tr);
             
@@ -471,60 +502,229 @@ function processUploadData(data) {
     console.log('⚡ Processing upload data:', data.length, 'records');
     
     try {
-        // Convert data to delivery format
+        // Convert data to delivery format with consistent field naming
         const deliveries = data.map((row, index) => {
+            // Use enhanced column mapping if available
+            const getColValue = window.getEnhancedColumnValue || function(row, names, fallbackIndex = null) {
+                // Fallback to simple mapping
+                for (const name of names) {
+                    if (row[name] !== undefined && row[name] !== null && row[name] !== '') {
+                        return String(row[name]).trim();
+                    }
+                }
+                if (fallbackIndex !== null && row[fallbackIndex] !== undefined && row[fallbackIndex] !== null) {
+                    return String(row[fallbackIndex]).trim();
+                }
+                return '';
+            };
+            
+            // Extract values with enhanced mapping
+            const drNumber = getColValue(row, [
+                'DR Number', 'dr_number', 'DR_Number', 'drNumber', 'DR', 'dr',
+                'Delivery Receipt', 'Receipt Number', 'Document Number'
+            ]) || 'DR-' + Date.now() + '-' + index;
+            
+            const customerName = getColValue(row, [
+                'Customer', 'customer_name', 'Customer Name', 'Client', 'client_name',
+                'Company', 'Customer Company', 'Consignee'
+            ]) || 'Unknown Customer';
+            
+            const vendorNumber = getColValue(row, [
+                'Vendor', 'vendor_number', 'Vendor Number'
+            ]) || '';
+            
+            const origin = getColValue(row, [
+                'Origin', 'origin', 'From', 'Source', 'Pickup', 'Start',
+                'Origin Address', 'Pickup Location'
+            ]) || '';
+            
+            const destination = getColValue(row, [
+                'Destination', 'destination', 'To', 'Delivery', 'End', 'Drop',
+                'Destination Address', 'Delivery Location', 'Drop Location'
+            ]) || '';
+            
+            const truckType = getColValue(row, [
+                'Truck Type', 'truck_type'
+            ]) || '';
+            
+            const truckPlate = getColValue(row, [
+                'Truck Plate', 'truck_plate', 'Truck Plate Number'
+            ]) || '';
+            
+            // Extract new columns with enhanced mapping and fallback to column indices
+            const itemNumber = getColValue(row, [
+                'Item Number', 'Item number', 'item_number', 'Item #', 'Item#',
+                'ItemNumber', 'Item_Number'
+            ], 9) || '';
+            
+            const mobileNumber = getColValue(row, [
+                'Mobile#', 'Mobile Number', 'Mobile', 'mobile_number', 'MobileNumber'
+            ], 10) || '';
+            
+            const itemDescription = getColValue(row, [
+                'Item Description', 'Item description', 'item_description', 'Description',
+                'ItemDescription'
+            ], 11) || '';
+            
+            const serialNumber = getColValue(row, [
+                'Serial Number', 'Serial number', 'serial_number', 'Serial',
+                'SerialNumber', 'SN', 'S/N'
+            ], 14) || '';
+            
+            // Use consistent date format
+            const currentDate = new Date().toISOString().split('T')[0];
+            
             return {
                 id: 'DEL-' + Date.now() + '-' + index,
-                dr_number: row['DR Number'] || row['dr_number'] || 'DR-' + Date.now() + '-' + index,
-                customer_name: row['Customer'] || row['customer_name'] || 'Unknown Customer',
-                vendor_number: row['Vendor'] || row['vendor_number'] || '',
-                origin: row['Origin'] || row['origin'] || '',
-                destination: row['Destination'] || row['destination'] || '',
-                truck_type: row['Truck Type'] || row['truck_type'] || '',
-                truck_plate_number: row['Truck Plate'] || row['truck_plate'] || '',
+                drNumber: drNumber,
+                customerName: customerName,
+                vendorNumber: vendorNumber,
+                origin: origin,
+                destination: destination,
+                truckType: truckType,
+                truckPlateNumber: truckPlate,
+                itemNumber: itemNumber,
+                mobileNumber: mobileNumber,
+                itemDescription: itemDescription,
+                serialNumber: serialNumber,
                 status: 'Active',
-                created_date: new Date().toLocaleDateString(),
+                created_date: currentDate,
+                deliveryDate: currentDate,
+                bookedDate: currentDate,
+                createdBy: 'Excel Upload',
                 created_by: 'Excel Upload',
                 created_at: new Date().toISOString()
             };
         });
         
-        console.log('✅ Data converted to delivery format');
+        console.log('✅ Data converted to delivery format with new columns');
+        console.log('📊 Sample delivery:', deliveries[0]);
         
         // Save to Supabase or localStorage
         saveDeliveries(deliveries);
         
     } catch (error) {
         console.error('❌ Error processing upload data:', error);
-        alert('Error processing data: ' + error.message);
+        if (typeof showToast === 'function') {
+            showToast('Error processing data: ' + error.message, 'danger');
+        } else {
+            alert('Error processing data: ' + error.message);
+        }
     }
 }
 
 async function saveDeliveries(deliveries) {
     console.log('💾 Saving deliveries:', deliveries.length);
+    console.log('📋 Sample delivery data:', deliveries[0]);
+    
+    // Add performance timing
+    const startTime = performance.now();
     
     try {
         let savedCount = 0;
+        let saveErrors = [];
         
-        for (const delivery of deliveries) {
-            try {
-                if (window.dataService) {
-                    await window.dataService.saveDelivery(delivery);
-                    console.log('✅ Saved to Supabase:', delivery.dr_number);
-                } else {
-                    // Fallback to localStorage
-                    window.activeDeliveries = window.activeDeliveries || [];
-                    window.activeDeliveries.push(delivery);
-                    localStorage.setItem('mci-active-deliveries', JSON.stringify(window.activeDeliveries));
-                    console.log('✅ Saved to localStorage:', delivery.dr_number);
+        // Process deliveries in batches to prevent UI blocking
+        const batchSize = 5;
+        for (let i = 0; i < deliveries.length; i += batchSize) {
+            const batch = deliveries.slice(i, i + batchSize);
+            console.log(`📦 Processing batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(deliveries.length/batchSize)} (${batch.length} items)`);
+            
+            // Process batch items
+            for (const delivery of batch) {
+                try {
+                    console.log('🔄 Saving delivery:', delivery.drNumber);
+                    if (window.dataService && window.dataService.supabase) {
+                        // Save to Supabase with proper field mapping
+                        const supabaseDelivery = {
+                            dr_number: delivery.drNumber,
+                            customer_name: delivery.customerName,
+                            vendor_number: delivery.vendorNumber || '',
+                            origin: delivery.origin,
+                            destination: delivery.destination,
+                            truck_type: delivery.truckType || '',
+                            truck_plate_number: delivery.truckPlateNumber || '',
+                            status: delivery.status,
+                            distance: '',
+                            additional_costs: 0.00,
+                            created_date: delivery.created_date,
+                            created_by: delivery.createdBy || 'Excel Upload',
+                            created_at: delivery.created_at,
+                            updated_at: delivery.created_at,
+                            // NEW: Add the new fields
+                            item_number: delivery.itemNumber || '',
+                            mobile_number: delivery.mobileNumber || '',
+                            item_description: delivery.itemDescription || '',
+                            serial_number: delivery.serialNumber || ''
+                        };
+                        
+                        await window.dataService.saveDelivery(supabaseDelivery);
+                        console.log('✅ Saved to Supabase:', delivery.drNumber);
+                    } else {
+                        // Fallback to localStorage with consistent field naming
+                        window.activeDeliveries = window.activeDeliveries || [];
+                        
+                        // Ensure consistent field naming for display
+                        const localStorageDelivery = {
+                            id: delivery.id,
+                            drNumber: delivery.drNumber,
+                            dr_number: delivery.drNumber, // For compatibility
+                            customerName: delivery.customerName,
+                            customer_name: delivery.customerName, // For compatibility
+                            vendorNumber: delivery.vendorNumber || '',
+                            vendor_number: delivery.vendorNumber || '', // For compatibility
+                            origin: delivery.origin,
+                            destination: delivery.destination,
+                            truckType: delivery.truckType || '',
+                            truck_type: delivery.truckType || '', // For compatibility
+                            truckPlateNumber: delivery.truckPlateNumber || '',
+                            truck_plate_number: delivery.truckPlateNumber || '', // For compatibility
+                            status: delivery.status,
+                            created_date: delivery.created_date,
+                            deliveryDate: delivery.created_date, // For compatibility
+                            bookedDate: delivery.created_date, // For compatibility
+                            itemNumber: delivery.itemNumber || '',
+                            item_number: delivery.itemNumber || '', // For compatibility
+                            mobileNumber: delivery.mobileNumber || '',
+                            mobile_number: delivery.mobileNumber || '', // For compatibility
+                            itemDescription: delivery.itemDescription || '',
+                            item_description: delivery.itemDescription || '', // For compatibility
+                            serialNumber: delivery.serialNumber || '',
+                            serial_number: delivery.serialNumber || '', // For compatibility
+                            createdBy: delivery.createdBy || 'Excel Upload',
+                            created_by: delivery.createdBy || 'Excel Upload', // For compatibility
+                            created_at: delivery.created_at,
+                            additionalCosts: 0.00,
+                            additional_costs: 0.00 // For compatibility
+                        };
+                        
+                        window.activeDeliveries.push(localStorageDelivery);
+                        localStorage.setItem('mci-active-deliveries', JSON.stringify(window.activeDeliveries));
+                        console.log('✅ Saved to localStorage:', delivery.drNumber);
+                    }
+                    savedCount++;
+                } catch (error) {
+                    console.error('❌ Error saving delivery:', delivery.drNumber, error);
+                    saveErrors.push({
+                        drNumber: delivery.drNumber,
+                        error: error.message
+                    });
                 }
-                savedCount++;
-            } catch (error) {
-                console.error('❌ Error saving delivery:', delivery.dr_number, error);
+            }
+            
+            // Small delay to prevent UI blocking
+            if (i + batchSize < deliveries.length) {
+                await new Promise(resolve => setTimeout(resolve, 100));
             }
         }
         
-        console.log(`🎉 Upload complete: ${savedCount}/${deliveries.length} deliveries saved`);
+        const endTime = performance.now();
+        const duration = ((endTime - startTime) / 1000).toFixed(2);
+        console.log(`🎉 Upload complete: ${savedCount}/${deliveries.length} deliveries saved in ${duration} seconds`);
+        
+        if (saveErrors.length > 0) {
+            console.error('❌ Save errors:', saveErrors);
+        }
         
         // Close modal and show success
         const modal = document.getElementById('drUploadModal');
@@ -538,16 +738,37 @@ async function saveDeliveries(deliveries) {
             }
         }
         
-        alert(`Successfully uploaded ${savedCount} deliveries!`);
+        // Show success message
+        if (typeof showToast === 'function') {
+            showToast(`Successfully uploaded ${savedCount} deliveries in ${duration} seconds!`, 'success');
+        } else {
+            alert(`Successfully uploaded ${savedCount} deliveries in ${duration} seconds!`);
+        }
         
-        // Refresh the page to show new data
+        // Refresh the active deliveries display
+        console.log('🔄 Refreshing active deliveries display...');
         if (typeof window.loadActiveDeliveries === 'function') {
-            window.loadActiveDeliveries();
+            // Add a small delay to ensure data is saved before refresh
+            setTimeout(() => {
+                window.loadActiveDeliveries();
+            }, 500);
+        } else {
+            console.log('⚠️ loadActiveDeliveries function not available');
+            // Manual refresh of display
+            if (typeof window.populateActiveDeliveriesTable === 'function') {
+                setTimeout(() => {
+                    window.populateActiveDeliveriesTable();
+                }, 500);
+            }
         }
         
     } catch (error) {
         console.error('❌ Error saving deliveries:', error);
-        alert('Error saving deliveries: ' + error.message);
+        if (typeof showToast === 'function') {
+            showToast('Error saving deliveries: ' + error.message, 'danger');
+        } else {
+            alert('Error saving deliveries: ' + error.message);
+        }
     }
 }
 

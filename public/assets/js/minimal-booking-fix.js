@@ -118,11 +118,20 @@ window.minimalLoadActiveDeliveries = function() {
 window.loadActiveDeliveries = async function() {
     console.log('🔄 Enhanced loadActiveDeliveries called');
     
+    // Ensure Supabase is initialized
+    if (typeof window.initSupabase === 'function') {
+        console.log('🔧 Initializing Supabase client...');
+        window.initSupabase();
+    }
+    
     // SUPABASE FIRST: Central database is the source of truth
     try {
         // Load from Supabase first (central database)
         if (window.dataService && typeof window.dataService.getDeliveries === 'function') {
+            console.log('🔧 Attempting to load deliveries from Supabase...');
             const deliveries = await window.dataService.getDeliveries();
+            console.log('🔧 Supabase response:', deliveries);
+            
             if (deliveries && deliveries.length > 0) {
                 // Normalize field names using global field mapper
                 const normalizedDeliveries = window.normalizeDeliveryArray ? 

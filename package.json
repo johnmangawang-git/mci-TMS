@@ -35,15 +35,16 @@
   },
   "homepage": "https://github.com/johnmangawang-git/mci-delivery-tracker#readme",
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "helmet": "^7.0.0",
     "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "helmet": "^7.0.0",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1",
     "eslint": "^8.45.0",
+    "nodemon": "^3.0.1",
     "prettier": "^3.0.0"
   },
   "engines": {

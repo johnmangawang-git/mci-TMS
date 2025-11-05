@@ -7,33 +7,44 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <!-- Content Security Policy to allow necessary connections while maintaining security -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' ws://localhost:8088 http://localhost:8088 https://ntyvrezyhrmflswxefbk.supabase.co wss://ntyvrezyhrmflswxefbk.supabase.co https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://unpkg.com https://cdnjs.cloudflare.com; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: https://*.tile.openstreetmap.org; object-src 'none';"
+    <!-- Content Security Policy is now defined in server.js -->
     <title>MCI App</title>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; connect-src 'self' ws://localhost:8088 http://localhost:8088 https://ntyvrezyhrmflswxefbk.supabase.co wss://ntyvrezyhrmflswxefbk.supabase.co https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://unpkg.com https://cdnjs.cloudflare.com; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: https://*.tile.openstreetmap.org; object-src 'none';"
+        <title>MCI App</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="manifest" href="/manifest.json">
     <!-- Bootstrap 5.3.0 with fallback -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" onload="this.onload=null;window.bootstrapLoaded=true;" onerror="this.onerror=null;window.bootstrapLoaded=false;loadLocalBootstrapCSS();">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        onload="this.onload=null;window.bootstrapLoaded=true;"
+        onerror="this.onerror=null;window.bootstrapLoaded=false;loadLocalBootstrapCSS();">
     <!-- Bootstrap Icons with fallback -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" onload="this.onload=null;window.bootstrapIconsLoaded=true;" onerror="this.onerror=null;window.bootstrapIconsLoaded=false;loadLocalBootstrapIcons();">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+        onload="this.onload=null;window.bootstrapIconsLoaded=true;"
+        onerror="this.onerror=null;window.bootstrapIconsLoaded=false;loadLocalBootstrapIcons();">
     <!-- Google Fonts - Roboto for Material Design -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <!-- Chart.js for analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" onload="this.onload=null;window.chartJsLoaded=true;" onerror="this.onerror=null;window.chartJsLoaded=false;loadLocalChartJs();"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" onload="this.onload=null;window.chartJsLoaded=true;"
+        onerror="this.onerror=null;window.chartJsLoaded=false;loadLocalChartJs();"></script>
     <!-- Leaflet CSS for interactive maps -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" onload="this.onload=null;window.leafletCssLoaded=true;" onerror="this.onerror=null;window.leafletCssLoaded=false;loadLocalLeafletCss();"/>
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""
+        onload="this.onload=null;window.leafletCssLoaded=true;"
+        onerror="this.onerror=null;window.leafletCssLoaded=false;loadLocalLeafletCss();" />
 
     <!-- Leaflet JavaScript for interactive maps -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" onload="this.onload=null;window.leafletJsLoaded=true;" onerror="this.onerror=null;window.leafletJsLoaded=false;loadLocalLeafletJs();"></script>
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""
+        onload="this.onload=null;window.leafletJsLoaded=true;"
+        onerror="this.onerror=null;window.leafletJsLoaded=false;loadLocalLeafletJs();"></script>
 
     <!-- Supabase Configuration -->
     <script>
         // Set Supabase configuration from environment variables or defaults
         window.SUPABASE_URL = '%SUPABASE_URL%';
         window.SUPABASE_ANON_KEY = '%SUPABASE_ANON_KEY%';
-        
+
         // CDN Fallback Functions - Senior Developer Implementation
         function loadLocalBootstrapCSS() {
             console.warn('Bootstrap CSS CDN failed, loading local fallback');
@@ -43,7 +54,7 @@
             link.onerror = () => console.error('Local Bootstrap CSS also failed to load');
             document.head.appendChild(link);
         }
-        
+
         function loadLocalBootstrapIcons() {
             console.warn('Bootstrap Icons CDN failed, loading local fallback');
             const link = document.createElement('link');
@@ -52,7 +63,7 @@
             link.onerror = () => console.error('Local Bootstrap Icons also failed to load');
             document.head.appendChild(link);
         }
-        
+
         function loadLocalChartJs() {
             console.warn('Chart.js CDN failed, loading local fallback');
             const script = document.createElement('script');
@@ -60,11 +71,11 @@
             script.onerror = () => {
                 console.error('Local Chart.js also failed to load');
                 // Provide minimal chart functionality
-                window.Chart = { register: () => {}, defaults: {} };
+                window.Chart = { register: () => { }, defaults: {} };
             };
             document.head.appendChild(script);
         }
-        
+
         function loadLocalLeafletCss() {
             console.warn('Leaflet CSS CDN failed, loading local fallback');
             const link = document.createElement('link');
@@ -73,7 +84,7 @@
             link.onerror = () => console.error('Local Leaflet CSS also failed to load');
             document.head.appendChild(link);
         }
-        
+
         function loadLocalLeafletJs() {
             console.warn('Leaflet JS CDN failed, loading local fallback');
             const script = document.createElement('script');
@@ -81,15 +92,15 @@
             script.onerror = () => {
                 console.error('Local Leaflet JS also failed to load');
                 // Provide minimal Leaflet functionality
-                window.L = { 
-                    map: () => ({ setView: () => {}, on: () => {} }),
-                    tileLayer: () => ({ addTo: () => {} }),
-                    marker: () => ({ addTo: () => {} })
+                window.L = {
+                    map: () => ({ setView: () => { }, on: () => { } }),
+                    tileLayer: () => ({ addTo: () => { } }),
+                    marker: () => ({ addTo: () => { } })
                 };
             };
             document.head.appendChild(script);
         }
-        
+
         function loadLocalSupabase() {
             console.warn('Supabase CDN failed, loading local fallback');
             const script = document.createElement('script');
@@ -97,15 +108,15 @@
             script.onerror = () => {
                 console.error('Local Supabase also failed to load');
                 // Provide minimal Supabase functionality
-                window.supabase = { 
-                    createClient: () => ({ 
+                window.supabase = {
+                    createClient: () => ({
                         from: () => ({ select: () => Promise.resolve({ data: [], error: null }) })
                     })
                 };
             };
             document.head.appendChild(script);
         }
-        
+
         function loadLocalSignaturePad() {
             console.warn('SignaturePad CDN failed, loading local fallback');
             const script = document.createElement('script');
@@ -113,16 +124,16 @@
             script.onerror = () => {
                 console.error('Local SignaturePad also failed to load');
                 // Provide minimal SignaturePad functionality
-                window.SignaturePad = function() { 
-                    return { 
-                        clear: () => {}, 
-                        toDataURL: () => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==' 
-                    }; 
+                window.SignaturePad = function () {
+                    return {
+                        clear: () => { },
+                        toDataURL: () => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+                    };
                 };
             };
             document.head.appendChild(script);
         }
-        
+
         function loadLocalXlsx() {
             console.warn('XLSX CDN failed, loading local fallback');
             const script = document.createElement('script');
@@ -134,7 +145,7 @@
                     utils: {
                         json_to_sheet: (data) => ({ '!ref': 'A1:A1', A1: { v: 'No data', t: 's' } }),
                         book_new: () => ({ SheetNames: [], Sheets: {} }),
-                        book_append_sheet: () => {},
+                        book_append_sheet: () => { },
                         sheet_to_csv: () => 'No data available'
                     },
                     writeFile: () => console.warn('Excel export not available - XLSX library failed to load')
@@ -145,93 +156,97 @@
     </script>
 
     <!-- Supabase CDN with fallback -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js" onload="this.onload=null;window.supabaseLoaded=true;" onerror="this.onerror=null;window.supabaseLoaded=false;loadLocalSupabase();"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"
+        onload="this.onload=null;window.supabaseLoaded=true;"
+        onerror="this.onerror=null;window.supabaseLoaded=false;loadLocalSupabase();"></script>
     <!-- Signature Pad Library with fallback -->
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js" onload="this.onload=null;window.signaturePadLoaded=true;" onerror="this.onerror=null;window.signaturePadLoaded=false;loadLocalSignaturePad();"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js"
+        onload="this.onload=null;window.signaturePadLoaded=true;"
+        onerror="this.onerror=null;window.signaturePadLoaded=false;loadLocalSignaturePad();"></script>
 
     <!-- FIELD MAPPING SERVICE - Handles ID and field format conversion -->
     <script src="assets/js/field-mapping-service.js"></script>
-    
+
     <!-- MODAL COMPATIBILITY SERVICE - Ensures all modals work with centralized system -->
     <script src="assets/js/modal-compatibility-service.js"></script>
-    
+
     <!-- CENTRALIZED DATABASE SERVICES - Multi-user synchronized data -->
     <script src="assets/js/centralized-data-service.js"></script>
     <script src="assets/js/centralized-booking-service.js"></script>
-    
+
     <!-- CENTRALIZED EXCEL INTEGRATION - Excel uploads through Supabase -->
     <script src="assets/js/centralized-excel-integration.js"></script>
-    
+
     <!-- EXCEL UPLOAD FIX - Fixes 409 conflicts and ensures data only goes to Active Deliveries -->
     <script src="assets/js/excel-upload-fix.js"></script>
-    
+
     <!-- FIX DATA DUPLICATION - Prevents delivery history duplication and handles 406 errors -->
     <script src="assets/js/fix-data-duplication.js"></script>
-    
+
     <!-- DISABLE CENTRALIZED OVERRIDES - Prevent localStorage blocking -->
     <script>
         window.CENTRALIZED_OVERRIDES_DISABLED = true;
         console.log('🔧 Centralized overrides disabled');
     </script>
-    
 
-    
+
+
     <!-- FORCE DASHBOARD FIX - Aggressively fixes dashboard numbers -->
     <script src="assets/js/force-dashboard-fix.js"></script>
-    
+
     <!-- DEBUG EXCEL UPLOAD - Test Excel upload functionality -->
     <script src="assets/js/debug-excel-upload.js"></script>
-    
+
     <!-- ABSOLUTE FINAL FIX - Must load FIRST to completely reset system -->
     <script src="assets/js/absolute-final-fix.js"></script>
-    
+
     <!-- EXCEL UPLOAD ACTIVE DELIVERIES FIX - Fixes Excel uploads not showing -->
     <script src="assets/js/excel-upload-active-deliveries-fix.js"></script>
-    
+
     <!-- ULTIMATE FIX - Must load FIRST to override all problematic functions -->
     <script src="assets/js/ultimate-fix.js"></script>
-    
+
     <!-- ASSIGNMENT ERROR FIX - Must load first to prevent read-only errors -->
     <script src="assets/js/assignment-error-fix.js"></script>
-    
+
     <!-- NUCLEAR ERROR SUPPRESSION - Must load first to catch all errors -->
     <script src="assets/js/nuclear-error-suppression.js"></script>
-    
+
     <!-- ANALYTICS COMPLETE OVERRIDE - Must load before analytics.js -->
     <script src="assets/js/analytics-complete-override.js"></script>
-    
+
     <!-- EMERGENCY ERROR FIXES - Immediate fixes for console errors -->
     <script src="assets/js/emergency-error-fixes.js"></script>
-    
+
     <!-- COMPLETE ERROR FIXES - Comprehensive fixes for all remaining errors -->
     <script src="assets/js/complete-error-fixes.js"></script>
-    
+
     <!-- FINAL ERROR SUPPRESSION - Fixes all remaining JavaScript errors -->
     <script src="assets/js/final-error-suppression.js"></script>
-    
+
     <!-- CENTRALIZED FUNCTION OVERRIDES - Ensures all functions use centralized system -->
     <script src="assets/js/centralized-function-overrides.js"></script>
-    
+
     <!-- DEFINITIVE SUPABASE FIX - FINAL COMPREHENSIVE SOLUTION -->
     <script src="assets/js/definitive-supabase-fix.js"></script>
-    
+
     <!-- BOOKING & EXCEL UPLOAD FIX -->
     <script src="assets/js/booking-excel-fix.js"></script>
-    
+
     <!-- DASHBOARD STATISTICS - REAL DATA WILDCARDS -->
     <script src="assets/js/dashboard-stats.js"></script>
-    
+
     <!-- Application JavaScript Files -->
     <script src="assets/js/field-mapper.js"></script>
     <script src="assets/js/modal-utils.js"></script>
     <script src="assets/js/calendar.js"></script>
-    
+
     <!-- AUTO-SYNC SERVICE - Automatically syncs localStorage with Supabase -->
     <script src="assets/js/auto-sync-service.js"></script>
-    
+
     <!-- STORAGE PRIORITY CONFIGURATION - Supabase-primary with offline resilience -->
     <script src="assets/js/storage-priority-config.js"></script>
-    
+
     <!-- DISABLE MANUAL BOOKING - REDIRECT TO EXCEL UPLOAD (Must load after calendar.js) -->
     <script src="assets/js/disable-manual-booking.js"></script>
     <!-- Enhanced DR Preview with improved column mapping -->
@@ -249,107 +264,123 @@
     <script src="assets/js/main-fixed.js"></script>
     <script src="assets/js/e-signature.js"></script>
     <script src="assets/js/app.js"></script>
-    
+
     <!-- LOGOUT FUNCTIONALITY - Clean, dedicated logout implementation -->
     <script src="assets/js/logout.js"></script>
-    
+
     <!-- Main application functionality -->
     <script src="assets/js/main.js"></script>
-    
+
     <!-- AUTO-SYNC INTEGRATION - Integrates auto-sync with existing functions -->
     <script src="assets/js/auto-sync-integration.js"></script>
-    
+
     <!-- ROW CLICK SELECTION - Toggle checkboxes by clicking table rows -->
+    <!-- Custom Scripts -->
+    <!-- REMOVED: <script src="assets/js/config.js"></script> (File doesn't exist) -->
+    <!-- REMOVED DUPLICATE REFERENCES - These are already loaded above -->
+    <!-- <script src="assets/js/dataService.js"></script> -->
+    <!-- <script src="assets/js/supabase.js"></script> -->
+    <!-- <script src="assets/js/booking.js"></script> -->
+    <script src="assets/js/upload-dr-fix.js"></script>
+    <!-- NEW: Add Excel Upload Test Script -->
+    <script src="assets/js/excel-upload-test.js"></script>
+
     <script src="assets/js/row-click-selection.js"></script>
-    
+
     <!-- Minimal booking fix - ensures booking system works (status update parts disabled) -->
     <script src="assets/js/minimal-booking-fix.js"></script>
-    
+
     <!-- Signature completion fix - prevents signature_pad.ts:136 error -->
     <script src="assets/js/signature-completion-fix.js"></script>
-    
+
     <!-- Delivery history fix - ensures signed DR items appear in history -->
     <script src="assets/js/delivery-history-fix.js"></script>
-    
+
     <!-- Enhanced Group Signature - DR-Only Mode: Complete ALL deliveries with same DR Number -->
     <!-- IMPORTANT: Must load AFTER other updateDeliveryStatus functions to override them -->
     <script src="assets/js/enhanced-group-signature-dr-only.js?v=2.2"></script>
-    
+
     <!-- COMPREHENSIVE SIGNATURE TO HISTORY FIX - Latest comprehensive solution -->
     <script src="assets/js/signature-to-history-comprehensive-fix.js"></script>
-    
+
     <!-- DATE FIELD MAPPING FIX - Fixes cross-browser date display issues -->
     <script src="assets/js/date-field-mapping-fix.js"></script>
-    
+
     <!-- CUSTOMER FIELD MAPPING FIX - Fixes cross-browser customer data issues -->
     <script src="assets/js/customer-field-mapping-fix.js"></script>
-    
+
     <!-- CUSTOMER SUPABASE SCHEMA FIX - Fixes 400 errors by mapping JS fields to Supabase schema -->
     <script src="assets/js/customer-supabase-schema-fix.js"></script>
-    
+
     <!-- CUSTOMER 400 ERROR DIAGNOSTIC - Helps identify and debug customer API issues -->
     <script src="assets/js/customer-400-error-diagnostic.js"></script>
-    
+
     <!-- CROSS-BROWSER DATA SYNC - Syncs data between Chrome/Edge via Supabase -->
     <script src="assets/js/cross-browser-data-sync.js"></script>
     <script src="assets/js/customer-400-error-diagnostic.js"></script>
-    
+
     <!-- CUSTOMER DUPLICATE MANAGEMENT - Comprehensive duplicate detection and merging system -->
     <script src="assets/js/customer-duplicate-management.js"></script>
-    
+
+    <!-- CONSOLIDATED ACTIVE DELIVERIES FIX - Single comprehensive fix for all display issues -->
+    <script src="assets/js/consolidated-active-deliveries-fix.js"></script>
+
+    <!-- ACTIVE DELIVERIES TEST SCRIPT - Tests the display fixes -->
+    <script src="assets/js/active-deliveries-test.js"></script>
+
     <!-- ADDITIONAL COSTS SUPABASE FIX - Ensures cost breakdown data is saved to Supabase -->
     <script src="assets/js/additional-costs-supabase-fix.js"></script>
-    
+
     <!-- ANALYTICS ERROR FIX - Handles analytics errors gracefully with fallbacks -->
     <script src="assets/js/analytics-error-fix.js"></script>
-    
+
     <!-- ADDITIONAL COSTS ANALYSIS FIX - Fixes ONLY the Additional Costs Analysis line chart -->
     <script src="assets/js/additional-costs-analysis-fix.js"></script>
-    
+
     <!-- SUPABASE SCHEMA DIAGNOSTIC - Identifies missing tables/views and provides guidance -->
     <script src="assets/js/supabase-schema-diagnostic.js"></script>
-    
+
     <!-- DISABLE SUPABASE ANALYTICS TEMPORARILY - Forces localStorage fallback until schema applied -->
     <script src="assets/js/disable-supabase-analytics-temporarily.js"></script>
-    
+
     <!-- BOOKING CUSTOMER INTEGRATION FIX - Ensures booking uses enhanced customer functions -->
     <script src="assets/js/booking-customer-integration-fix.js"></script>
-    
+
     <!-- SUPABASE-ONLY CUSTOMER FIX - Forces all customer data to come from Supabase only -->
     <script src="assets/js/supabase-only-customer-fix.js"></script>
-    
+
     <!-- EXCEL CUSTOMER CREATION FIX - Ensures Excel uploads create customers properly -->
     <script src="assets/js/excel-customer-creation-fix.js"></script>
-    
+
     <!-- EXCEL UPLOAD CUSTOMER DEBUG FIX - Debug and ensure customer creation during Excel upload -->
     <script src="assets/js/excel-upload-customer-debug-fix.js"></script>
-    
+
     <!-- FORCE EXCEL CUSTOMER CREATION - Forces customer creation during Excel upload -->
     <script src="assets/js/force-excel-customer-creation.js"></script>
-    
+
     <!-- EXCEL UPLOAD REAL-TIME DEBUG - Real-time monitoring of Excel upload process -->
     <script src="assets/js/excel-upload-real-time-debug.js"></script>
-    
+
     <!-- DIRECT EXCEL CUSTOMER INTEGRATION - Direct integration bypassing all dependencies -->
     <script src="assets/js/direct-excel-customer-integration.js"></script>
-    
+
     <!-- GitHub Pages compatibility fix - ensures data persistence works -->
     <script src="assets/js/github-pages-fix.js"></script>
-    
+
     <!-- DISABLED: Direct fix for Upload DR File button - Now handled by booking.js -->
     <!-- <script src="assets/js/upload-dr-fix.js" onload="console.log('✅ upload-dr-fix.js loaded successfully')" onerror="console.error('❌ upload-dr-fix.js failed to load')"></script> -->
-    
+
     <!-- INLINE BACKUP: Upload DR File button fix -->
     <script>
         // Global function to handle file selection
-        window.handleFileSelection = function(file) {
+        window.handleFileSelection = function (file) {
             console.log('🚀 GLOBAL: File selected:', file?.name);
-            
+
             if (!file) {
                 console.error('❌ No file selected');
                 return;
             }
-            
+
             // Try original functions first, then fallback to inline backup
             if (typeof window.processDRFile === 'function') {
                 console.log('✅ GLOBAL: Using original processDRFile function');
@@ -359,37 +390,37 @@
                 window.processSelectedFile(file);
             } else {
                 console.log('⚠️ GLOBAL: No processing functions available, using inline backup');
-                
+
                 // INLINE BACKUP PROCESSING
                 try {
                     console.log('📖 INLINE: Starting file processing...');
-                    
+
                     // Check XLSX library
                     if (typeof XLSX === 'undefined') {
                         alert('Excel processing library not loaded. Please refresh the page and try again.');
                         return;
                     }
-                    
+
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         try {
                             console.log('📖 INLINE: Reading Excel data...');
                             const data = new Uint8Array(e.target.result);
                             const workbook = XLSX.read(data, { type: 'array' });
                             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
                             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                            
+
                             console.log('✅ INLINE: Excel processed:', jsonData.length, 'rows');
                             console.log('📊 INLINE: Sample data:', jsonData[0]);
-                            
+
                             if (jsonData.length === 0) {
                                 alert('No data found in Excel file. Please check the file format.');
                                 return;
                             }
-                            
+
                             // Show preview window instead of alert
                             console.log('📋 INLINE: Showing data preview...');
-                            
+
                             // Try to show preview if function exists
                             if (typeof window.showDataPreview === 'function') {
                                 console.log('✅ INLINE: Using showDataPreview function');
@@ -398,50 +429,50 @@
                                 console.log('⚠️ INLINE: showDataPreview not available, creating inline preview');
                                 showInlinePreview(jsonData, file.name);
                             }
-                            
+
                         } catch (error) {
                             console.error('❌ INLINE: Error processing Excel:', error);
                             alert('Error processing Excel file: ' + error.message);
                         }
                     };
-                    
-                    reader.onerror = function(error) {
+
+                    reader.onerror = function (error) {
                         console.error('❌ INLINE: Error reading file:', error);
                         alert('Error reading file: ' + error.message);
                     };
-                    
+
                     reader.readAsArrayBuffer(file);
-                    
+
                 } catch (error) {
                     console.error('❌ INLINE: Error in backup processing:', error);
                     alert('Error in backup processing: ' + error.message);
                 }
             }
         };
-        
+
         // Inline preview function
-        window.showInlinePreview = function(data, filename) {
+        window.showInlinePreview = function (data, filename) {
             console.log('📋 INLINE PREVIEW: Creating preview for', data.length, 'records');
-            
+
             // Hide upload content and show preview
             const uploadContent = document.getElementById('drUploadContent');
             const previewContent = document.getElementById('drPreviewContent');
-            
+
             if (uploadContent) {
                 uploadContent.style.display = 'none';
                 console.log('✅ INLINE PREVIEW: Upload content hidden');
             }
-            
+
             if (previewContent) {
                 previewContent.style.display = 'block';
                 console.log('✅ INLINE PREVIEW: Preview content shown');
-                
+
                 // Populate preview table
                 const previewTable = document.getElementById('drPreviewTableBody');
                 if (previewTable) {
                     console.log('📋 INLINE PREVIEW: Populating table...');
                     previewTable.innerHTML = '';
-                    
+
                     // Helper function to get column value with multiple possible names
                     const getColumnValue = (row, possibleNames) => {
                         for (const name of possibleNames) {
@@ -451,37 +482,37 @@
                         }
                         return 'N/A';
                     };
-                    
+
                     // Show first 10 rows as preview
                     const previewData = data.slice(0, 10);
-                    
+
                     previewData.forEach((row, index) => {
                         const tr = document.createElement('tr');
-                        
+
                         const drNumber = getColumnValue(row, [
                             'DR Number', 'dr_number', 'DR_Number', 'drNumber', 'DR', 'dr',
                             'Delivery Receipt', 'Receipt Number', 'Document Number'
                         ]);
-                        
+
                         const customer = getColumnValue(row, [
                             'Customer', 'customer_name', 'Customer Name', 'Client', 'client_name',
                             'Company', 'Customer Company', 'Consignee'
                         ]);
-                        
+
                         const vendorNumber = getColumnValue(row, [
                             'Vendor', 'vendor_number', 'Vendor Number'
                         ]) || '';
-                        
+
                         const origin = getColumnValue(row, [
                             'Origin', 'origin', 'From', 'Source', 'Pickup', 'Start',
                             'Origin Address', 'Pickup Location'
                         ]);
-                        
+
                         const destination = getColumnValue(row, [
                             'Destination', 'destination', 'To', 'Delivery', 'End', 'Drop',
                             'Destination Address', 'Delivery Location', 'Drop Location'
                         ]);
-                        
+
                         // NEW: Extract data from specified columns as per user requirements
                         // Column J (index 9) == Item number
                         // Column K (index 10) == Mobile#
@@ -491,7 +522,7 @@
                         const mobileNumber = row[10] !== undefined && row[10] !== null ? String(row[10]).trim() : '';
                         const itemDescription = row[11] !== undefined && row[11] !== null ? String(row[11]).trim() : '';
                         const serialNumber = row[14] !== undefined && row[14] !== null ? String(row[14]).trim() : '';
-                        
+
                         tr.innerHTML = `
                             <td>${drNumber}</td>
                             <td>${customer}</td>
@@ -506,12 +537,12 @@
                             <td>${serialNumber}</td>
                         `;
                         previewTable.appendChild(tr);
-                        
+
                         console.log(`✅ INLINE PREVIEW: Added row ${index + 1}: ${drNumber}`);
                     });
-                    
+
                     console.log('✅ INLINE PREVIEW: Table populated with', previewData.length, 'rows');
-                    
+
                     // Add summary info
                     const summaryDiv = document.createElement('div');
                     summaryDiv.className = 'alert alert-success mt-3';
@@ -522,24 +553,24 @@
                         <strong>Preview:</strong> Showing first ${Math.min(10, data.length)} records<br>
                         <strong>Available Columns:</strong> ${Object.keys(data[0] || {}).join(', ')}
                     `;
-                    
+
                     // Remove existing summary
                     const existingSummary = previewContent.querySelector('.alert-success');
                     if (existingSummary) existingSummary.remove();
-                    
+
                     previewContent.appendChild(summaryDiv);
-                    
+
                     // Store data for confirmation
                     window.pendingDRData = data;
                     console.log('💾 INLINE PREVIEW: Data stored for confirmation');
-                    
+
                     // Enable confirm button
                     const confirmBtn = document.getElementById('confirmDrUploadBtn');
                     if (confirmBtn) {
                         confirmBtn.disabled = false;
                         console.log('✅ INLINE PREVIEW: Confirm button enabled');
                     }
-                    
+
                 } else {
                     console.error('❌ INLINE PREVIEW: Preview table not found');
                     alert('Preview table not found. Data processed successfully but cannot show preview.');
@@ -549,30 +580,30 @@
                 alert('Preview area not found. Data processed successfully:\\n\\nFile: ' + filename + '\\nRecords: ' + data.length);
             }
         };
-        
+
         // Inline upload processing function
-        window.processInlineUpload = function(data) {
+        window.processInlineUpload = function (data) {
             console.log('⚡ INLINE UPLOAD: Processing', data.length, 'records for upload');
-            
+
             try {
                 // ENHANCED: Collect additional cost items from DR modal
                 const collectAdditionalCostItems = () => {
                     const costItems = [];
                     let totalCost = 0;
-                    
+
                     try {
                         const costDescriptions = document.querySelectorAll('.dr-cost-description');
                         const costAmounts = document.querySelectorAll('.dr-cost-amount');
-                        
+
                         console.log('📊 Collecting cost items from DR modal...', {
                             descriptions: costDescriptions.length,
                             amounts: costAmounts.length
                         });
-                        
+
                         for (let i = 0; i < Math.min(costDescriptions.length, costAmounts.length); i++) {
                             const description = costDescriptions[i].value?.trim();
                             const amount = parseFloat(costAmounts[i].value) || 0;
-                            
+
                             if (description && amount > 0) {
                                 costItems.push({
                                     description: description,
@@ -583,18 +614,18 @@
                                 console.log(`✅ Collected cost item: ${description} = ₱${amount}`);
                             }
                         }
-                        
+
                         console.log('📊 Total cost items collected:', costItems.length, 'Total amount:', totalCost);
                     } catch (error) {
                         console.warn('⚠️ Could not collect cost items from modal:', error.message);
                     }
-                    
+
                     return { costItems, totalCost };
                 };
-                
+
                 // Collect cost items once for all deliveries
                 const { costItems, totalCost } = collectAdditionalCostItems();
-                
+
                 // Convert data to delivery format
                 const deliveries = data.map((row, index) => {
                     const getColumnValue = (possibleNames) => {
@@ -605,7 +636,7 @@
                         }
                         return '';
                     };
-                    
+
                     // NEW: Extract data from specified columns as per user requirements
                     // Column J (index 9) == Item number
                     // Column K (index 10) == Mobile#
@@ -615,7 +646,7 @@
                     const mobileNumber = row[10] !== undefined && row[10] !== null ? String(row[10]).trim() : '';
                     const itemDescription = row[11] !== undefined && row[11] !== null ? String(row[11]).trim() : '';
                     const serialNumber = row[14] !== undefined && row[14] !== null ? String(row[14]).trim() : '';
-                    
+
                     return {
                         id: 'DEL-' + Date.now() + '-' + index,
                         dr_number: getColumnValue(['DR Number', 'dr_number', 'DR_Number', 'drNumber', 'DR']) || 'DR-' + Date.now() + '-' + index,
@@ -638,9 +669,9 @@
                         additional_cost_items: costItems // Individual cost items for analytics breakdown
                     };
                 });
-                
+
                 console.log('✅ INLINE UPLOAD: Data converted to delivery format');
-                
+
                 // Save deliveries
                 let savedCount = 0;
                 const savePromises = deliveries.map(async (delivery) => {
@@ -660,10 +691,10 @@
                         console.error('❌ INLINE UPLOAD: Error saving:', delivery.dr_number, error);
                     }
                 });
-                
+
                 Promise.all(savePromises).then(() => {
                     console.log(`🎉 INLINE UPLOAD: Complete! ${savedCount}/${deliveries.length} deliveries saved`);
-                    
+
                     // Close modal
                     const modal = document.getElementById('drUploadModal');
                     if (modal) {
@@ -676,49 +707,49 @@
                             document.body.classList.remove('modal-open');
                         }
                     }
-                    
+
                     // Show success message
                     alert(`🎉 Upload Successful!
 
 Saved ${savedCount} deliveries to the system.
 
 The page will refresh to show your new data.`);
-                    
+
                     // Refresh the page to show new data
                     setTimeout(() => {
                         window.location.reload();
                     }, 2000);
                 });
-                
+
             } catch (error) {
                 console.error('❌ INLINE UPLOAD: Error processing upload:', error);
                 alert('Error processing upload: ' + error.message);
             }
         };
-        
+
         // Backup function to fix buttons after modal is shown
-        window.fixModalButtons = function() {
+        window.fixModalButtons = function () {
             console.log('🔧 BACKUP: Fixing modal buttons...');
-            
+
             // First, try to use the original booking.js initialization
             if (typeof window.initDRUpload === 'function') {
                 console.log('✅ BACKUP: Using original initDRUpload function');
                 window.initDRUpload();
                 return; // Exit early if original function works
             }
-            
+
             // Fallback to manual button fixing
             const selectBtn = document.getElementById('selectDrFileBtn');
             const fileInput = document.getElementById('drFileInput');
-            
+
             if (selectBtn && !selectBtn.hasAttribute('data-fixed')) {
                 console.log('🔧 BACKUP: Adding event listener to select button');
-                
-                selectBtn.addEventListener('click', function(e) {
+
+                selectBtn.addEventListener('click', function (e) {
                     console.log('🚀 BACKUP: Select button clicked via event listener');
                     e.preventDefault();
                     e.stopPropagation();
-                    
+
                     if (fileInput) {
                         fileInput.click();
                         console.log('✅ BACKUP: File input triggered');
@@ -726,15 +757,15 @@ The page will refresh to show your new data.`);
                         console.error('❌ BACKUP: File input not found');
                     }
                 });
-                
+
                 selectBtn.setAttribute('data-fixed', 'true');
                 console.log('✅ BACKUP: Select button fixed');
             }
-            
+
             if (fileInput && !fileInput.hasAttribute('data-fixed')) {
                 console.log('🔧 BACKUP: Adding event listener to file input');
-                
-                fileInput.addEventListener('change', function(e) {
+
+                fileInput.addEventListener('change', function (e) {
                     console.log('📁 BACKUP: File input changed via event listener');
                     if (e.target.files[0]) {
                         // Try original function first
@@ -745,15 +776,15 @@ The page will refresh to show your new data.`);
                         }
                     }
                 });
-                
+
                 fileInput.setAttribute('data-fixed', 'true');
                 console.log('✅ BACKUP: File input fixed');
             }
         };
-        
+
         // Check function availability after page load
-        window.addEventListener('load', function() {
-            setTimeout(function() {
+        window.addEventListener('load', function () {
+            setTimeout(function () {
                 console.log('🔍 DIAGNOSTIC: Checking function availability...');
                 console.log('processSelectedFile available:', typeof window.processSelectedFile === 'function');
                 console.log('processDRFile available:', typeof window.processDRFile === 'function');
@@ -762,7 +793,7 @@ The page will refresh to show your new data.`);
                 console.log('showDataPreview available:', typeof window.showDataPreview === 'function');
                 console.log('XLSX available:', typeof XLSX !== 'undefined');
                 console.log('handleFileSelection available:', typeof window.handleFileSelection === 'function');
-                
+
                 // Try to initialize the original DR upload functionality
                 if (typeof window.initDRUpload === 'function') {
                     console.log('✅ DIAGNOSTIC: Calling original initDRUpload function');
@@ -772,28 +803,28 @@ The page will refresh to show your new data.`);
                 }
             }, 2000);
         });
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
+
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
                 const btn = document.getElementById('uploadDrFileBtn');
                 if (btn) {
-                    btn.onclick = function() {
+                    btn.onclick = function () {
                         console.log('INLINE: Upload button clicked');
                         const modal = document.getElementById('drUploadModal');
                         if (modal) {
                             if (typeof bootstrap !== 'undefined') {
                                 const bsModal = new bootstrap.Modal(modal);
                                 bsModal.show();
-                                
+
                                 // Fix buttons after modal is shown
-                                modal.addEventListener('shown.bs.modal', function() {
+                                modal.addEventListener('shown.bs.modal', function () {
                                     console.log('🔧 Modal shown, fixing buttons...');
                                     setTimeout(fixModalButtons, 100);
                                 }, { once: true });
                             } else {
                                 modal.style.display = 'block';
                                 modal.classList.add('show');
-                                
+
                                 // Fix buttons after manual modal show
                                 setTimeout(fixModalButtons, 100);
                             }
@@ -802,7 +833,7 @@ The page will refresh to show your new data.`);
                             const input = document.createElement('input');
                             input.type = 'file';
                             input.accept = '.xlsx,.xls';
-                            input.onchange = function(e) {
+                            input.onchange = function (e) {
                                 if (e.target.files[0]) {
                                     handleFileSelection(e.target.files[0]);
                                 }
@@ -815,17 +846,17 @@ The page will refresh to show your new data.`);
             }, 1000);
         });
     </script>
-    
+
     <!-- Emergency fix for disappearing bookings -->
     <script>
         console.log('🚨 Emergency booking fix loading...');
-        
+
         // Force initialize arrays
         if (typeof window.activeDeliveries === 'undefined') {
             window.activeDeliveries = [];
             console.log('🔧 Emergency: Initialized window.activeDeliveries');
         }
-        
+
         // Load existing data immediately
         try {
             const saved = localStorage.getItem('mci-active-deliveries');
@@ -839,10 +870,10 @@ The page will refresh to show your new data.`);
         } catch (error) {
             console.error('Emergency load error:', error);
         }
-        
+
         // Prevent array from being cleared
         let originalActiveDeliveries = window.activeDeliveries;
-        
+
         // Override any function that might clear the array
         const protectArray = () => {
             if (window.activeDeliveries.length === 0 && originalActiveDeliveries.length > 0) {
@@ -851,10 +882,10 @@ The page will refresh to show your new data.`);
             }
             originalActiveDeliveries = [...window.activeDeliveries];
         };
-        
+
         // Check every second for array clearing
         setInterval(protectArray, 1000);
-        
+
         // Force display refresh every 3 seconds - WITH CHECKBOX PRESERVATION
         // DISABLED: This was causing status changes to revert every 3 seconds
         // setInterval(() => {
@@ -879,10 +910,10 @@ The page will refresh to show your new data.`);
         //         });
         //     }, 100);
         // }, 3000);
-        
+
         console.log('✅ Emergency booking fix active');
     </script>
-    
+
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- Custom styles for development -->
     <style>
@@ -918,7 +949,7 @@ The page will refresh to show your new data.`);
             top: 0;
             left: 0;
             transform: translate(-50%, -100%);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         /* Map modal styles */
@@ -932,17 +963,17 @@ The page will refresh to show your new data.`);
             margin-bottom: 5px;
         }
     </style>
-    
+
     <!-- Service Worker Registration -->
     <script>
         // Register service worker to handle message passing and prevent async listener errors
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
+            window.addEventListener('load', function () {
                 navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
+                    .then(function (registration) {
                         console.log('Service Worker registered with scope:', registration.scope);
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         console.log('Service Worker registration failed:', error);
                     });
             });
@@ -951,7 +982,8 @@ The page will refresh to show your new data.`);
 </head>
 
 <body>
-    <div id="offline-banner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; background-color: #dc3545; color: white; text-align: center; padding: 10px; z-index: 10000;">
+    <div id="offline-banner"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; background-color: #dc3545; color: white; text-align: center; padding: 10px; z-index: 10000;">
         Offline mode — changes will sync when back online.
     </div>
     <script>
@@ -978,7 +1010,7 @@ The page will refresh to show your new data.`);
                 initializeApp();
             }
         });
-        
+
         // Function to initialize the main application
         function initializeApp() {
             console.log('Initializing main application');
@@ -1065,8 +1097,10 @@ The page will refresh to show your new data.`);
                     <div class="text-muted" style="font-size: 13px; cursor: pointer; position: relative;" id="userRole">
                         Logistics Manager
                         <!-- Dropdown menu for user actions -->
-                        <div class="dropdown-menu" id="userDropdown" style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 120px; z-index: 1000;">
-                            <a class="dropdown-item" href="#" id="logoutOption" style="display: block; padding: 8px 12px; text-decoration: none; color: #dc3545; font-size: 14px;">
+                        <div class="dropdown-menu" id="userDropdown"
+                            style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 120px; z-index: 1000;">
+                            <a class="dropdown-item" href="#" id="logoutOption"
+                                style="display: block; padding: 8px 12px; text-decoration: none; color: #dc3545; font-size: 14px;">
                                 <i class="bi bi-box-arrow-right me-2"></i>Logout
                             </a>
                         </div>
@@ -1148,7 +1182,8 @@ The page will refresh to show your new data.`);
                         </button>
                     </div>
                     <div class="calendar-controls">
-                        <button class="btn btn-primary" id="uploadDrFileBtn"><i class="bi bi-upload"></i> Upload DR File</button>
+                        <button class="btn btn-primary" id="uploadDrFileBtn"><i class="bi bi-upload"></i> Upload DR
+                            File</button>
                         <button class="btn btn-outline-secondary active" data-view="month"><i
                                 class="bi bi-calendar-month"></i> Month</button>
                         <button class="btn btn-outline-secondary" data-view="week"><i class="bi bi-calendar-week"></i>
@@ -1314,6 +1349,7 @@ The page will refresh to show your new data.`);
                                     <th>Truck</th>
                                     <th>Status</th>
                                     <th>Booked Date</th>
+                                    <th>Additional Costs</th>
                                     <th>Item #</th>
                                     <th>Mobile#</th>
                                     <th>Item Description</th>
@@ -1354,7 +1390,8 @@ The page will refresh to show your new data.`);
                             <button class="btn btn-outline-secondary" id="selectDeliveryHistoryBtn">
                                 <i class="bi bi-printer"></i> Print
                             </button>
-                            <button class="btn btn-outline-secondary" id="exportDeliveryHistoryPdfBtn" style="display: none;">
+                            <button class="btn btn-outline-secondary" id="exportDeliveryHistoryPdfBtn"
+                                style="display: none;">
                                 <i class="bi bi-file-earmark-pdf"></i> Export PDF
                             </button>
                             <button class="btn btn-outline-secondary" id="exportDeliveryHistoryBtn"><i
@@ -1378,7 +1415,8 @@ The page will refresh to show your new data.`);
                             <thead>
                                 <tr>
                                     <th style="width: 40px;">
-                                        <input type="checkbox" class="form-check-input" id="selectAllHistory" style="display: none;">
+                                        <input type="checkbox" class="form-check-input" id="selectAllHistory"
+                                            style="display: none;">
                                     </th>
                                     <th>Date</th>
                                     <th>DR Number</th>
@@ -2208,7 +2246,7 @@ The page will refresh to show your new data.`);
                             </ul>
                         </div>
                     </div>
-                    
+
                     <div id="drUploadContent">
                         <div class="text-center py-4">
                             <i class="bi bi-file-earmark-excel display-1 text-success"></i>
@@ -2220,10 +2258,10 @@ The page will refresh to show your new data.`);
                             <input type="file" id="drFileInput" accept=".xlsx,.xls" style="display: none;">
                         </div>
                     </div>
-                    
+
                     <div id="drPreviewContent" style="display: none;">
                         <h6><i class="bi bi-eye"></i> Preview Data & Configuration</h6>
-                        
+
                         <!-- DR Items Preview Table -->
                         <div class="mb-4">
                             <h6 class="text-muted mb-2">DR Items to be Created</h6>
@@ -2279,8 +2317,8 @@ The page will refresh to show your new data.`);
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="drTruckPlate" class="form-label">Truck Plate #</label>
-                                                <input type="text" class="form-control" id="drTruckPlate" 
-                                                       placeholder="Enter plate number (e.g., ABC-1234)" required>
+                                                <input type="text" class="form-control" id="drTruckPlate"
+                                                    placeholder="Enter plate number (e.g., ABC-1234)" required>
                                                 <div class="form-text">Truck plate number for all DR items</div>
                                             </div>
                                         </div>
@@ -2300,34 +2338,37 @@ The page will refresh to show your new data.`);
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <label class="form-label">Description</label>
-                                                        <input type="text" class="form-control dr-cost-description" 
-                                                               placeholder="e.g., Fuel Surcharge, Toll Fee">
+                                                        <input type="text" class="form-control dr-cost-description"
+                                                            placeholder="e.g., Fuel Surcharge, Toll Fee">
                                                         <div class="form-text">Cost description for analytics</div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label class="form-label">Amount</label>
                                                         <div class="input-group">
                                                             <span class="input-group-text">₱</span>
-                                                            <input type="number" class="form-control dr-cost-amount" 
-                                                                   placeholder="0.00" min="0" step="0.01">
+                                                            <input type="number" class="form-control dr-cost-amount"
+                                                                placeholder="0.00" min="0" step="0.01">
                                                         </div>
                                                         <div class="form-text">Cost amount</div>
                                                     </div>
                                                     <div class="col-md-2 d-flex align-items-end">
-                                                        <button type="button" class="btn btn-outline-danger remove-dr-cost" disabled>
+                                                        <button type="button"
+                                                            class="btn btn-outline-danger remove-dr-cost" disabled>
                                                             <i class="bi bi-x-lg"></i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm" id="addDrCostBtn">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm"
+                                            id="addDrCostBtn">
                                             <i class="bi bi-plus-circle me-1"></i>Add Additional Cost
                                         </button>
                                         <div class="mt-3">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span class="text-muted">Total Additional Cost:</span>
-                                                <span class="fw-bold text-primary" id="drTotalAdditionalCost">₱0.00</span>
+                                                <span class="fw-bold text-primary"
+                                                    id="drTotalAdditionalCost">₱0.00</span>
                                             </div>
                                         </div>
                                     </div>
@@ -2382,10 +2423,14 @@ The page will refresh to show your new data.`);
     </div>
 
     <!-- SheetJS for Excel Export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" onload="this.onload=null;window.xlsxLoaded=true;" onerror="this.onerror=null;window.xlsxLoaded=false;loadLocalXlsx();"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
+        onload="this.onload=null;window.xlsxLoaded=true;"
+        onerror="this.onerror=null;window.xlsxLoaded=false;loadLocalXlsx();"></script>
 
     <!-- Bootstrap JS with fallback -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" onload="this.onload=null;window.bootstrapJSLoaded=true;" onerror="this.onerror=null;window.bootstrapJSLoaded=false;loadLocalBootstrapJS();"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        onload="this.onload=null;window.bootstrapJSLoaded=true;"
+        onerror="this.onerror=null;window.bootstrapJSLoaded=false;loadLocalBootstrapJS();"></script>
 
     <!-- Initialize signature pad when modal is shown -->
     <script>
@@ -2403,7 +2448,7 @@ The page will refresh to show your new data.`);
             }
         });
     </script>
-    
+
     <!-- Test data script -->
     <script src="test-data.js"></script>
 
@@ -2418,7 +2463,7 @@ The page will refresh to show your new data.`);
             link.type = 'text/css';
             document.head.appendChild(link);
         }
-        
+
         // Function to load local Bootstrap Icons if CDN fails
         function loadLocalBootstrapIcons() {
             console.log('Loading local Bootstrap Icons fallback');
@@ -2428,7 +2473,7 @@ The page will refresh to show your new data.`);
             link.type = 'text/css';
             document.head.appendChild(link);
         }
-        
+
         // Function to load local Supabase if CDN fails
         function loadLocalSupabase() {
             console.log('Loading local Supabase fallback');
@@ -2436,7 +2481,7 @@ The page will refresh to show your new data.`);
             script.src = 'assets/js/supabase-local.js';
             document.head.appendChild(script);
         }
-        
+
         // Function to load local Bootstrap JS if CDN fails
         function loadLocalBootstrapJS() {
             console.log('Loading local Bootstrap JS fallback');
@@ -2444,7 +2489,7 @@ The page will refresh to show your new data.`);
             script.src = 'assets/js/bootstrap.bundle.min.js';
             document.head.appendChild(script);
         }
-        
+
         // Function to load local Chart.js if CDN fails
         function loadLocalChartJs() {
             console.log('Loading local Chart.js fallback');
@@ -2452,7 +2497,7 @@ The page will refresh to show your new data.`);
             script.src = 'assets/js/chart.min.js';
             document.head.appendChild(script);
         }
-        
+
         // Function to load local Leaflet CSS if CDN fails
         function loadLocalLeafletCss() {
             console.log('Loading local Leaflet CSS fallback');
@@ -2462,7 +2507,7 @@ The page will refresh to show your new data.`);
             link.type = 'text/css';
             document.head.appendChild(link);
         }
-        
+
         // Function to load local Leaflet JS if CDN fails
         function loadLocalLeafletJs() {
             console.log('Loading local Leaflet JS fallback');
@@ -2470,7 +2515,7 @@ The page will refresh to show your new data.`);
             script.src = 'assets/js/leaflet.js';
             document.head.appendChild(script);
         }
-        
+
         // Function to load local Signature Pad if CDN fails
         function loadLocalSignaturePad() {
             console.log('Loading local Signature Pad fallback');
@@ -2479,65 +2524,65 @@ The page will refresh to show your new data.`);
             document.head.appendChild(script);
         }
 
-        
+
         // Enhanced check with more detailed logging
-        setTimeout(function() {
+        setTimeout(function () {
             if (window.bootstrapLoaded === false) {
                 console.warn('Bootstrap CSS failed to load from CDN');
                 loadLocalBootstrapCSS();
             } else if (window.bootstrapLoaded === undefined) {
                 console.warn('Bootstrap CSS loading status unknown');
             }
-            
+
             if (window.bootstrapIconsLoaded === false) {
                 console.warn('Bootstrap Icons failed to load from CDN');
                 loadLocalBootstrapIcons();
             } else if (window.bootstrapIconsLoaded === undefined) {
                 console.warn('Bootstrap Icons loading status unknown');
             }
-            
+
             if (window.supabaseLoaded === false) {
                 console.warn('Supabase JS failed to load from CDN');
                 loadLocalSupabase();
             } else if (window.supabaseLoaded === undefined) {
                 console.warn('Supabase JS loading status unknown');
             }
-            
+
             if (window.bootstrapJSLoaded === false) {
                 console.warn('Bootstrap JS failed to load from CDN');
                 loadLocalBootstrapJS();
             } else if (window.bootstrapJSLoaded === undefined) {
                 console.warn('Bootstrap JS loading status unknown');
             }
-            
+
             if (window.chartJsLoaded === false) {
                 console.warn('Chart.js failed to load from CDN');
                 loadLocalChartJs();
             } else if (window.chartJsLoaded === undefined) {
                 console.warn('Chart.js loading status unknown');
             }
-            
+
             if (window.leafletCssLoaded === false) {
                 console.warn('Leaflet CSS failed to load from CDN');
                 loadLocalLeafletCss();
             } else if (window.leafletCssLoaded === undefined) {
                 console.warn('Leaflet CSS loading status unknown');
             }
-            
+
             if (window.leafletJsLoaded === false) {
                 console.warn('Leaflet JS failed to load from CDN');
                 loadLocalLeafletJs();
             } else if (window.leafletJsLoaded === undefined) {
                 console.warn('Leaflet JS loading status unknown');
             }
-            
+
             if (window.signaturePadLoaded === false) {
                 console.warn('Signature Pad failed to load from CDN');
                 loadLocalSignaturePad();
             } else if (window.signaturePadLoaded === undefined) {
                 console.warn('Signature Pad loading status unknown');
             }
-            
+
             if (window.xlsxLoaded === false) {
                 console.warn('XLSX failed to load from CDN');
                 loadLocalXlsx();
@@ -2566,16 +2611,17 @@ The page will refresh to show your new data.`);
                             <p class="text-muted">Select an Excel file containing delivery receipt data</p>
                         </div>
 
-                        
+
                         <div class="mt-4">
                             <h6>Supported formats:</h6>
                             <ul class="list-unstyled">
                                 <li><i class="bi bi-check-circle text-success"></i> Excel (.xlsx, .xls)</li>
-                                <li><i class="bi bi-info-circle text-info"></i> File should contain DR numbers, customer names, and destinations</li>
+                                <li><i class="bi bi-info-circle text-info"></i> File should contain DR numbers, customer
+                                    names, and destinations</li>
                             </ul>
                         </div>
                     </div>
-                    
+
                     <!-- Preview Section -->
                     <div id="drPreviewContent" style="display: none;">
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -2584,7 +2630,7 @@ The page will refresh to show your new data.`);
                                 <i class="bi bi-arrow-left"></i> Back
                             </button>
                         </div>
-                        
+
                         <!-- Truck Reference -->
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -2596,7 +2642,7 @@ The page will refresh to show your new data.`);
                                 <input type="text" class="form-control" id="drTruckPlate" placeholder="e.g., ABC-1234">
                             </div>
                         </div>
-                        
+
                         <!-- Additional Costs -->
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center">
@@ -2612,7 +2658,7 @@ The page will refresh to show your new data.`);
                                 <strong>Total Additional Cost: ₱<span id="drTotalAdditionalCost">0.00</span></strong>
                             </div>
                         </div>
-                        
+
                         <!-- Preview Table -->
                         <div class="table-responsive">
                             <table class="table table-sm">
@@ -2636,12 +2682,12 @@ The page will refresh to show your new data.`);
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <!-- Preview Summary -->
                         <div class="alert alert-info">
                             <strong>Summary:</strong> <span id="drPreviewSummary">No data loaded</span>
                         </div>
-                        
+
                         <div class="d-flex gap-2 mt-3">
                             <button class="btn btn-outline-info" id="previewDrSummaryBtn">
                                 <i class="bi bi-eye"></i> Preview Summary
@@ -2657,7 +2703,7 @@ The page will refresh to show your new data.`);
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const toggleDeleteModeBtn = document.getElementById('toggleDeleteModeBtn');
             if (toggleDeleteModeBtn) {
                 toggleDeleteModeBtn.addEventListener('click', toggleDeliveryHistoryDeleteMode);
@@ -2670,7 +2716,7 @@ The page will refresh to show your new data.`);
         });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const toggleDeleteModeBtn = document.getElementById('toggleDeleteModeBtn');
             if (toggleDeleteModeBtn) {
                 toggleDeleteModeBtn.addEventListener('click', toggleDeliveryHistoryDeleteMode);
@@ -2683,7 +2729,7 @@ The page will refresh to show your new data.`);
 
             const confirmDrUploadBtn = document.getElementById('confirmDrUploadBtn');
             if (confirmDrUploadBtn) {
-                confirmDrUploadBtn.addEventListener('click', function() {
+                confirmDrUploadBtn.addEventListener('click', function () {
                     console.log('🚀 INLINE: Confirm button clicked');
                     if (window.pendingDRData) {
                         processInlineUpload(window.pendingDRData);

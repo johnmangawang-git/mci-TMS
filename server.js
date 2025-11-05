@@ -1,23 +1,28 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 
 const app = express();
-const PORT = process.env.PORT || 8086;
+const PORT = process.env.PORT || 8087;
 
 // Security middleware
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com", "https://unpkg.com"],
+            styleSrcElem: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com", "https://unpkg.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
             scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
-            imgSrc: ["'self'", "data:", "https:", "blob:"],
-            fontSrc: ["'self'", "https://cdn.jsdelivr.net"],
-            connectSrc: ["'self'", "https:", "wss:"],
+            scriptSrcElem: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
+            scriptSrcAttr: ["'unsafe-inline'"],
+            connectSrc: ["'self'", "https://*.supabase.co", "https:", "wss:", process.env.SUPABASE_URL],
+            imgSrc: ["'self'", "data:", "https:", "blob:", "https://*.tile.openstreetmap.org"],
             mediaSrc: ["'self'", "blob:"],
             objectSrc: ["'none'"],
             childSrc: ["'self'", "blob:"],
@@ -31,7 +36,7 @@ app.use(helmet({
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
         ? ['https://your-domain.com'] 
-        : ['http://localhost:8086', 'http://127.0.0.1:8086'],
+        : ['http://localhost:8087', 'http://127.0.0.1:8087'],
     credentials: true
 }));
 
@@ -78,9 +83,17 @@ app.post('/api/signatures', (req, res) => {
     });
 });
 
-// Catch-all handler: send back React's index.html file for SPA routing
+// Catch-all handler: send back the index.html file with injected environment variables
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    fs.readFile(path.join(__dirname, 'public', 'index.html'), 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).send('Error reading index.html');
+        }
+        const result = data
+            .replace(/%SUPABASE_URL%/g, process.env.SUPABASE_URL)
+            .replace(/%SUPABASE_ANON_KEY%/g, process.env.SUPABASE_ANON_KEY);
+        res.send(result);
+    });
 });
 
 // Error handling middleware

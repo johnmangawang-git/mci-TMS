@@ -1,3 +1,11 @@
+// Check if currentMapInstance is already defined to prevent duplicate identifier errors
+if (typeof window.currentMapInstance !== 'undefined') {
+    console.log('⚠️ currentMapInstance already defined, skipping definition');
+} else {
+    // Define currentMapInstance to prevent duplicate declaration errors
+    window.currentMapInstance = null;
+}
+
 // Booking modal functionality
 console.log('=== BOOKING.JS LOADED ===');
 
@@ -205,7 +213,6 @@ window.testBookingModal = function(dateStr) {
     // Use current date if no date provided
     const dateToUse = dateStr || new Date().toISOString().split('T')[0];
     console.log('Date to use:', dateToUse);
-    
     // Call the main function
     showBookingModal(dateToUse);
 };

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Upload DR Field Mapping</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2><i class="bi bi-clipboard-check"></i> Upload DR Field Mapping Test</h2>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Test Results</h5>
+            </div>
+            <div class="card-body">
+                <div id="testResults">
+                    <p>Running tests...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Sample Data Structure</h5>
+            </div>
+            <div class="card-body">
+                <pre id="sampleData"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <script>
+        // Test the upload DR field mapping
+        function testUploadDRMapping() {
+            console.log('🧪 Testing Upload DR Field Mapping...');
+            
+            // Create sample Excel data structure
+            const sampleExcelData = [
+                // Header row (index 0)
+                ['#', 'Doc', 'DocStatus', 'Document Number', 'Posting Date', 'Month', 'Customer/Vendor Code', 'Customer/Vendor Name', 'Ship To Address', 'Item Number', 'Mobile#', 'Item Description', '', '', 'Serial Number'],
+                // Data rows
+                ['1', 'DR', 'Active', 'DR-2024-001', '2024-01-15', 'January', 'CUST001', 'ABC Company Ltd', '123 Main St, Manila', 'ITEM001', '09171234567', 'Samsung Refrigerator 21cu ft', '', '', 'SN123456789'],
+                ['2', 'DR', 'Active', 'DR-2024-002', '2024-01-16', 'January', 'CUST002', 'XYZ Corporation', '456 Business Ave, Makati', 'ITEM002', '09187654321', 'LG Washing Machine 8kg', '', '', 'SN987654321'],
+                ['3', 'DR', 'Active', 'DR-2024-003', '2024-01-17', 'January', 'CUST003', 'DEF Industries', '789 Industrial Blvd, Quezon City', 'ITEM003', '09191112233', 'Whirlpool Microwave 1.2cu ft', '', '', 'SN456789123']
+            ];
+            
+            // Test the mapDRData function if available
+            let mappedData = [];
+            let testResults = [];
+            
+            // Check if functions are available
+            if (typeof window.mapDRData === 'function') {
+                testResults.push('✅ mapDRData function is available');
+                
+                try {
+                    mappedData = window.mapDRData(sampleExcelData);
+                    testResults.push(`✅ mapDRData processed ${mappedData.length} records`);
+                    
+                    if (mappedData.length > 0) {
+                        const firstRecord = mappedData[0];
+                        
+                        // Test core fields
+                        testResults.push(`✅ DR Number: ${firstRecord.drNumber || 'MISSING'}`);
+                        testResults.push(`✅ Customer Name: ${firstRecord.customerName || 'MISSING'}`);
+                        testResults.push(`✅ Vendor Number: ${firstRecord.vendorNumber || 'MISSING'}`);
+                        testResults.push(`✅ Origin: ${firstRecord.origin || 'MISSING'}`);
+                        testResults.push(`✅ Destination: ${firstRecord.destination || 'MISSING'}`);
+                        
+                        // Test new fields
+                        testResults.push(`✅ Item Number: ${firstRecord.itemNumber || 'MISSING'}`);
+                        testResults.push(`✅ Mobile Number: ${firstRecord.mobileNumber || 'MISSING'}`);
+                        testResults.push(`✅ Item Description: ${firstRecord.itemDescription || 'MISSING'}`);
+                        testResults.push(`✅ Serial Number: ${firstRecord.serialNumber || 'MISSING'}`);
+                        
+                        // Check if all required fields are present
+                        const requiredFields = ['drNumber', 'customerName', 'destination', 'itemNumber', 'mobileNumber', 'itemDescription', 'serialNumber'];
+                        const missingFields = requiredFields.filter(field => !firstRecord[field]);
+                        
+                        if (missingFields.length === 0) {
+                            testResults.push('✅ All required fields are properly mapped');
+                        } else {
+                            testResults.push(`❌ Missing fields: ${missingFields.join(', ')}`);
+                        }
+                        
+                    } else {
+                        testResults.push('❌ No records were mapped');
+                    }
+                    
+                } catch (error) {
+                    testResults.push(`❌ Error in mapDRData: ${error.message}`);
+                }
+                
+            } else {
+                testResults.push('❌ mapDRData function is not available');
+            }
+            
+            // Test Active Deliveries table structure
+            const tableBody = document.getElementById('activeDeliveriesTableBody');
+            if (tableBody) {
+                testResults.push('✅ Active Deliveries table body found');
+            } else {
+                testResults.push('❌ Active Deliveries table body not found');
+            }
+            
+            // Test populateActiveDeliveriesTable function
+            if (typeof window.populateActiveDeliveriesTable === 'function') {
+                testResults.push('✅ populateActiveDeliveriesTable function is available');
+            } else {
+                testResults.push('❌ populateActiveDeliveriesTable function is not available');
+            }
+            
+            // Display results
+            document.getElementById('testResults').innerHTML = testResults.map(result => `<p>${result}</p>`).join('');
+            
+            // Display sample data structure
+            if (mappedData.length > 0) {
+                document.getElementById('sampleData').textContent = JSON.stringify(mappedData[0], null, 2);
+            } else {
+                document.getElementById('sampleData').textContent = 'No mapped data available';
+            }
+        }
+        
+        // Load required scripts and run test
+        function loadScriptsAndTest() {
+            const scripts = [
+                'assets/js/booking.js',
+                'assets/js/app.js',
+                'assets/js/active-deliveries-display-fix.js'
+            ];
+            
+            let loadedScripts = 0;
+            
+            scripts.forEach(scriptSrc => {
+                const script = document.createElement('script');
+                script.src = scriptSrc;
+                script.onload = () => {
+                    loadedScripts++;
+                    console.log(`✅ Loaded: ${scriptSrc}`);
+                    
+                    if (loadedScripts === scripts.length) {
+                        // All scripts loaded, run test
+                        setTimeout(testUploadDRMapping, 1000);
+                    }
+                };
+                script.onerror = () => {
+                    console.error(`❌ Failed to load: ${scriptSrc}`);
+                    loadedScripts++;
+                    
+                    if (loadedScripts === scripts.length) {
+                        setTimeout(testUploadDRMapping, 1000);
+                    }
+                };
+                document.head.appendChild(script);
+            });
+        }
+        
+        // Initialize test
+        document.addEventListener('DOMContentLoaded', loadScriptsAndTest);
+    </script>
+</body>
+</html>

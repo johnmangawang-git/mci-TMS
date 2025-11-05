@@ -200,6 +200,11 @@ console.log('🔧 Loading Customer Supabase Schema Fix...');
             console.log('📝 Original customer data:', customer);
             
             const supabaseOp = async () => {
+                // Check if supabaseClient function exists
+                if (typeof window.supabaseClient !== 'function') {
+                    throw new Error('Supabase client function not available. Please check Supabase initialization.');
+                }
+                
                 const client = window.supabaseClient();
                 if (!client) {
                     throw new Error('Supabase client not available');
@@ -225,23 +230,7 @@ console.log('🔧 Loading Customer Supabase Schema Fix...');
                 return mapFromSupabaseSchema(data[0]);
             };
 
-            const localStorageOp = async () => {
-                const customers = JSON.parse(localStorage.getItem('mci-customers') || '[]');
-                const existingIndex = customers.findIndex(c => c.id === customer.id);
-                
-                if (existingIndex >= 0) {
-                    customers[existingIndex] = customer;
-                } else {
-                    customers.push(customer);
-                }
-                
-                localStorage.setItem('mci-customers', JSON.stringify(customers));
-                window.customers = customers;
-                
-                return customer;
-            };
-
-            return this.executeWithFallback(supabaseOp, localStorageOp, 'customers');
+            return this.execute(supabaseOp);
         };
         
         // Override getCustomers method
@@ -250,6 +239,11 @@ console.log('🔧 Loading Customer Supabase Schema Fix...');
             console.log('🔄 Enhanced getCustomers with schema mapping and duplicate merging...');
             
             const supabaseOp = async () => {
+                // Check if supabaseClient function exists
+                if (typeof window.supabaseClient !== 'function') {
+                    throw new Error('Supabase client function not available. Please check Supabase initialization.');
+                }
+                
                 const client = window.supabaseClient();
                 if (!client) {
                     throw new Error('Supabase client not available');
@@ -277,19 +271,7 @@ console.log('🔧 Loading Customer Supabase Schema Fix...');
                 return customers;
             };
 
-            const localStorageOp = async () => {
-                let customers = JSON.parse(localStorage.getItem('mci-customers') || '[]');
-                
-                // Merge duplicates in localStorage data too
-                customers = mergeDuplicateCustomersWithSchemaMapping(customers);
-                
-                // Save the merged data back to localStorage
-                localStorage.setItem('mci-customers', JSON.stringify(customers));
-                
-                return customers;
-            };
-
-            return this.executeWithFallback(supabaseOp, localStorageOp, 'customers');
+            return this.execute(supabaseOp);
         };
         
         console.log('✅ Enhanced dataService customer methods with schema mapping');

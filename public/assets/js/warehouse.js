@@ -64,6 +64,40 @@ class WarehouseMapManager {
         this.addMapControls();
 
         console.log('Warehouse map initialized successfully');
+
+        document.addEventListener('click', (event) => {
+            const useLocationBtn = event.target.closest('.use-location-btn');
+            if (useLocationBtn) {
+                const locationId = useLocationBtn.dataset.locationId;
+                this.useLocation(locationId);
+            }
+
+            const deleteLocationBtn = event.target.closest('.delete-location-btn');
+            if (deleteLocationBtn) {
+                const locationId = deleteLocationBtn.dataset.locationId;
+                this.deleteSavedLocation(locationId);
+            }
+
+            const saveLocationBtn = event.target.closest('.save-location-btn');
+            if (saveLocationBtn) {
+                const lat = saveLocationBtn.dataset.lat;
+                const lng = saveLocationBtn.dataset.lng;
+                this.saveLocation(lat, lng);
+            }
+
+            const toggleSavedLocationsListBtn = event.target.closest('.toggle-saved-locations-list-btn');
+            if (toggleSavedLocationsListBtn) {
+                this.toggleSavedLocationsList();
+            }
+
+            const closeSavedLocationsPanelBtn = event.target.closest('.close-saved-locations-panel-btn');
+            if (closeSavedLocationsPanelBtn) {
+                const panel = document.getElementById('savedLocationsPanel');
+                if(panel) {
+                    panel.remove();
+                }
+            }
+        });
     }
 
     // Add warehouse markers to the map
@@ -155,10 +189,10 @@ class WarehouseMapManager {
                 <p class="mb-2"><i class="bi bi-geo-alt"></i> ${location.address || 'Custom Location'}</p>
                 <p class="text-muted small">Saved on: ${new Date(location.dateAdded).toLocaleDateString()}</p>
                 <div class="popup-actions">
-                    <button class="btn btn-sm btn-primary" onclick="warehouseManager.useLocation('${location.id}')">
+                    <button class="btn btn-sm btn-primary use-location-btn" data-location-id="${location.id}">
                         <i class="bi bi-cursor"></i> Use Location
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="warehouseManager.deleteSavedLocation('${location.id}')">
+                    <button class="btn btn-sm btn-outline-danger delete-location-btn" data-location-id="${location.id}">
                         <i class="bi bi-trash"></i> Delete
                     </button>
                 </div>
@@ -211,7 +245,7 @@ class WarehouseMapManager {
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary" onclick="warehouseManager.saveLocation(${lat}, ${lng})">
+                            <button type="button" class="btn btn-primary save-location-btn" data-lat="${lat}" data-lng="${lng}">
                                 <i class="bi bi-bookmark-plus"></i> Save Location
                             </button>
                         </div>
@@ -334,7 +368,7 @@ class WarehouseMapManager {
         savedLocationsControl.onAdd = () => {
             const div = L.DomUtil.create('div', 'leaflet-control-custom');
             div.innerHTML = `
-                <button class="btn btn-primary btn-sm" onclick="warehouseManager.toggleSavedLocationsList()" title="Show Saved Locations">
+                <button class="btn btn-primary btn-sm toggle-saved-locations-list-btn" title="Show Saved Locations">
                     <i class="bi bi-list"></i> Saved Locations
                 </button>
             `;
@@ -379,7 +413,7 @@ class WarehouseMapManager {
             <div id="savedLocationsPanel" class="saved-locations-panel">
                 <div class="panel-header">
                     <h6><i class="bi bi-bookmark"></i> Saved Locations</h6>
-                    <button class="btn-close" onclick="document.getElementById('savedLocationsPanel').remove()"></button>
+                    <button class="btn-close close-saved-locations-panel-btn"></button>
                 </div>
                 <div class="panel-body">
                     <div id="savedLocationsList"></div>
@@ -417,10 +451,10 @@ class WarehouseMapManager {
                     ${location.description ? `<p class="location-desc">${location.description}</p>` : ''}
                 </div>
                 <div class="location-actions">
-                    <button class="btn btn-sm btn-outline-primary" onclick="warehouseManager.useLocation('${location.id}')" title="Go to location">
+                    <button class="btn btn-sm btn-outline-primary use-location-btn" data-location-id="${location.id}" title="Go to location">
                         <i class="bi bi-cursor"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="warehouseManager.deleteSavedLocation('${location.id}')" title="Delete location">
+                    <button class="btn btn-sm btn-outline-danger delete-location-btn" data-location-id="${location.id}" title="Delete location">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
